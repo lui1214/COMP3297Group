@@ -1,8 +1,17 @@
 from django.urls import path
-from pbi import views
+from . import views
 
 urlpatterns = [
-	path('pbi/',
+	path('', 
+		views.index, 
+		name='index'),
+	path('viewPBI/',
 		views.PbiView.as_view(),
-		name='pbi'),
+		name='viewPBI/'),
+	path('newPBI/',
+		views.PbiCreateView.as_view(),
+		name='newPBI'),
+	path('updatePBI/<int:pbiUpdate_pk>/',
+		views.PbiUpdateView.as_view(),
+		name='updatePBI'),
 ]

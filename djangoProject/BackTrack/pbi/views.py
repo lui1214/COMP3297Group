@@ -1,24 +1,28 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, UpdateView, CreateView
 from pbi.models import Item
 from pbi.forms import ItemForm
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 
-def newPBI(request):
-	template_name = 'pbi_new.html'
-	form = ItemForm(request.POST or None)
+def index(request):
+    return HttpResponse("Hello, world. You're at the index.")
 	
-	if form.is_valid():
-		obj = Item.objects.create(
-			order = form.cleaned_data.get('order'),
-			name = form.cleaned_data.get('name'),
-			description = form.cleaned_data.get('description'),
-			original_sprint_size = form.cleaned_data.get('original_sprint_size'),
-			remaining_sprint_size = form.cleaned_data.get('remaining_sprint_size'),
-			estimate_of_story_point = form.cleaned_data.get('estimate_of_story_point'),
-			status = form.cleaned_data.get('status')
-		)
-		return HttpResponse('OK')
-	return render(request, template_name, context={'form':form})
+class PbiUpdateView(UpdateView):
+		model = Item
+		fields = '__all__'
+		template_name = 'pbi_new.html'
+		pk_pbiUpdate_kwargs = 'pbiUpdate_pk'
 		
+		def get_object(self,queryset=None):
+			snum = int(self.kwargs.get(self.pk_pbiUpdate_kwargs,None))
+			obj = get_object_or_404(Item, pk=snum)
+			return obj
+		
+class PbiCreateView(CreateView):
+		model = Item
+		fields = '__all__'
+		template_name = 'pbi_new.html'
 		
 class PbiView(TemplateView):
       template_name = 'pbi_list.html'
