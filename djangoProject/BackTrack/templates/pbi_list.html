@@ -1,0 +1,32 @@
+<table class="table">
+    <thead>
+        <tr>
+            {% for k in header %}
+            <th>{{k}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in rows %}
+            <tr>
+				<td>{{ r.order }}</td>
+				<td>{{ r.name }}</td>
+                <td>{{ r.description }}</td>
+                <td>{{ r.original_sprint_size }}</td>
+                <td>{{ r.remaining_sprint_size }}</td>
+				<td>{{ r.estimate_of_story_point }}</td>
+				<td>{{ r.status }}</td>
+            </tr>
+		{% empty %}
+			<tr>
+				<td>*empty*</td>
+				<td>*empty*</td>
+                <td>*empty*</td>
+				<td>*empty*</td>
+				<td>*empty*</td>
+				<td>*empty*</td>
+				<td>*empty*</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
