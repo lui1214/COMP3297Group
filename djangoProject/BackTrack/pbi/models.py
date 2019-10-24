@@ -20,3 +20,5 @@ class Item(models.Model):
 		
 	def get_absolute_url(self):
 		return "/pbi/viewPBI/"
+	class Meta:
+		ordering = ['order']

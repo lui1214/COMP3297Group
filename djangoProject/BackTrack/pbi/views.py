@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the index.")
+    return HttpResponseRedirect("/pbi/viewPBI/")
 	
 class PbiUpdateView(UpdateView):
 		model = Item
@@ -41,6 +41,6 @@ class PbiView(TemplateView):
 
       def get_context_data(self, **kwargs):
             ctx = super(PbiView, self).get_context_data(**kwargs)
-            ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Status', 'Action']
+            ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Action']
             ctx['rows'] = Item.objects.all()
             return ctx
