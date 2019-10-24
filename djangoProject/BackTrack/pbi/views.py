@@ -3,8 +3,6 @@ from pbi.models import Item
 from pbi.forms import ItemForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse_lazy
-from django.contrib import messages
 
 def index(request):
     return HttpResponseRedirect("/pbi/viewPBI/")

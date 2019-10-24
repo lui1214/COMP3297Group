@@ -16,7 +16,7 @@
                 <td align="center" valign="center">{{ r.original_sprint_size }}</td>
                 <td align="center" valign="center">{{ r.remaining_sprint_size }}</td>
 				<td align="center" valign="center">{{ r.estimate_of_story_point }}</td>
-				<td align="center" valign="center">{{ cumulative }}</td>
+				<td align="center" valign="center">{{ cumulative|add:r.estimate_of_story_point }}</td>
 				<td align="center" valign="center">{{ r.status }}</td>
 				<td align="center" valign="center">
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ r.pk }}';">Edit</button>
