@@ -5,6 +5,7 @@
       {% csrf_token %}
       {{ form.as_p }}
       <input type="submit" value="Update">
+	  <button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="Back" type="reset">Back</button>
   </form>
 </body>
 </html>

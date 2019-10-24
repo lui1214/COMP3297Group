@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
     <thead>
         <tr>
             {% for k in header %}
@@ -9,24 +9,33 @@
     <tbody>
         {% for r in rows %}
             <tr>
-				<td>{{ r.order }}</td>
-				<td>{{ r.name }}</td>
-                <td>{{ r.description }}</td>
-                <td>{{ r.original_sprint_size }}</td>
-                <td>{{ r.remaining_sprint_size }}</td>
-				<td>{{ r.estimate_of_story_point }}</td>
-				<td>{{ r.status }}</td>
+				<td align="center" valign="center">{{ r.order }}</td>
+				<td align="center" valign="center">{{ r.name }}</td>
+                <td align="center" valign="center">{{ r.description }}</td>
+                <td align="center" valign="center">{{ r.original_sprint_size }}</td>
+                <td align="center" valign="center">{{ r.remaining_sprint_size }}</td>
+				<td align="center" valign="center">{{ r.estimate_of_story_point }}</td>
+				<td align="center" valign="center">{{ r.status }}</td>
+				<td align="center" valign="center">
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ r.pk }}';">Edit</button>
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ r.pk }}';">Delete</button>
+				</td>
             </tr>
 		{% empty %}
 			<tr>
-				<td>*empty*</td>
-				<td>*empty*</td>
-                <td>*empty*</td>
-				<td>*empty*</td>
-				<td>*empty*</td>
-				<td>*empty*</td>
-				<td>*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+                <td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*nothing to be done*</td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
+<br>
+<p align="center">
+	<button onclick="window.location.href = 'http://localhost:8000/pbi/createPBI/';">Add new PBI</button>
+</p>
