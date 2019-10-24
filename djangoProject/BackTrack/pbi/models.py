@@ -14,11 +14,11 @@ class Item(models.Model):
 	original_sprint_size = models.PositiveIntegerField()
 	remaining_sprint_size = models.PositiveIntegerField()
 	estimate_of_story_point = models.PositiveIntegerField()
+	cumulative_story_point = models.PositiveIntegerField(default=0)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+		
 	def __str__(self):
 		return self.name
 		
 	def get_absolute_url(self):
 		return "/pbi/viewPBI/"
-	class Meta:
-		ordering = ['order']

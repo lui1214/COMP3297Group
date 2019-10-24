@@ -7,7 +7,6 @@
         </tr>
     </thead>
     <tbody>
-		{% with cumulative=0 %}
         {% for r in rows %}
             <tr>
 				<td align="center" valign="center">{{ r.order }}</td>
@@ -16,11 +15,15 @@
                 <td align="center" valign="center">{{ r.original_sprint_size }}</td>
                 <td align="center" valign="center">{{ r.remaining_sprint_size }}</td>
 				<td align="center" valign="center">{{ r.estimate_of_story_point }}</td>
-				<td align="center" valign="center">{{ cumulative }}</td>
+				<td align="center" valign="center">{{ r.cumulative_story_point }}</td>
 				<td align="center" valign="center">{{ r.status }}</td>
 				<td align="center" valign="center">
+				{% if r.status == "Not yet started" %}
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ r.pk }}';">Edit</button>
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ r.pk }}';">Delete</button>
+				{% else %}
+					*Cannot modified started item*
+				{% endif %}
 				</td>
             </tr>
 		{% empty %}
@@ -36,11 +39,23 @@
 				<td align="center" valign="center">*nothing to be done*</td>
             </tr>
         {% endfor %}
-		{% endwith %}
     </tbody>
 </table>
 <br>
+
 <p align="center">
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/createPBI/';">Add new PBI</button>
 	
+</p>
+
+<hr>
+
+<p align="center">
+	Total Items: {{ itemCount }}
+</p>
+<p align="center">
+	Total Remaining Sprint Size: {{ remainSS }}
+</p>
+<p align="center">
+	Total Sprint Size: {{ totalSS }}
 </p>
