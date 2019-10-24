@@ -3,7 +3,6 @@ from pbi.models import Item
 from pbi.forms import ItemForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Sum, Count
 
 def index(request):
     return HttpResponseRedirect("/pbi/viewPBI/")
