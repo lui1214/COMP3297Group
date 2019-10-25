@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from datetime import datetime    
+from django.utils import timezone
 
 # Create your models here.
 class Item(models.Model):
@@ -16,6 +18,8 @@ class Item(models.Model):
 	estimate_of_story_point = models.PositiveIntegerField()
 	cumulative_story_point = models.PositiveIntegerField(default=0)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+	last_modified = models.DateTimeField(auto_now=True, auto_now_add=False, blank=True)
+	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 		
 	def __str__(self):
 		return self.name
