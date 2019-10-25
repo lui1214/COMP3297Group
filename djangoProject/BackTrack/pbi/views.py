@@ -3,6 +3,9 @@ from pbi.models import Item
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Sum
+from datetime import datetime
+import datetime
+from django.utils import timezone
 
 def index(request):
     return HttpResponseRedirect("/pbi/viewPBI/")
@@ -49,8 +52,8 @@ class PbiView(TemplateView):
 
 		def get_context_data(self, **kwargs):
 			ctx = super(PbiView, self).get_context_data(**kwargs)
-			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Last Sorted', 'Action']
-			ctx['rows'] = Item.objects.all().order_by('order')
+			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Sorted', 'Action']
+			ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
 			cumulative = 0
 			for i in ctx['rows']:
 				i.cumulative_story_point = 0
@@ -58,6 +61,8 @@ class PbiView(TemplateView):
 			for i in ctx['rows']:
 				cumulative = cumulative + i.estimate_of_story_point
 				i.cumulative_story_point = cumulative
+			#	i.last_sorted = timezone.now().replace(microsecond=999999)
+			#	i.save()
 			
 			q = Item.objects.aggregate(itemCount=Count('order'),
 				remainSS=Sum('remaining_sprint_size'),

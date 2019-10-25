@@ -19,7 +19,13 @@
 				<td align="center" valign="center">{{ r.status }}</td>
 				<td align="center" valign="center">{{ r.last_modified }}</td>
 				<td align="center" valign="center">{{ r.create_at }}</td>
-				<td align="center" valign="center">{{ r.last_sorted }}</td>
+				<td align="center" valign="center">
+					{% if r.last_sorted >= r.last_modified %}
+						True
+					{% else %}
+						False
+					{% endif %}
+				</td>
 				<td align="center" valign="center">
 				<button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBIdetail/{{ r.pk }}';">View</button>
 				{% if r.status == "Not yet started" %}
