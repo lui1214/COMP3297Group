@@ -25,5 +25,8 @@ urlpatterns = [
 		name='deletePBI'),
 	path('PersonHomePage/<int:person>/',
 		views.PersomHomepage.as_view(),
-		name='PersonHomepage')
+		name='PersonHomepage'),
+	path('ProjectList',
+		views.ProjectList.as_view(),
+		name='ProjectList')
 ]

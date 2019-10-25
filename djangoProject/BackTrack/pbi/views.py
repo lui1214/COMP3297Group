@@ -1,5 +1,5 @@
-from django.views.generic import TemplateView, UpdateView, CreateView, DeleteView
-from pbi.models import Item,Person
+from django.views.generic import TemplateView, UpdateView, CreateView, DeleteView,ListView
+from pbi.models import Item,Person,Project
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Sum
@@ -107,10 +107,11 @@ class PbiCurrentView(TemplateView):
 			
 class PersomHomepage(TemplateView):
 		template_name = 'PersonHomePage.html'
-
 		def get_context_data(self, **kwargs):
 			person = self.kwargs['person']
-
 			context = super().get_context_data(**kwargs)
 			context['person']=Person.objects.get(pk = person)
 			return context
+class ProjectList(ListView):
+	template_name="ProjectList.html"
+	model = Project

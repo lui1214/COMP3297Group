@@ -1,0 +1,16 @@
+<h1>Showing all projects</h1>
+<ul>
+{% for project in object_list %}
+    <li>
+        project name is {{ project.name }}
+    </li>
+    <li>
+        discription: {{project.discription}}
+    </li>
+    <li>
+        <button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="GoIntoProductBacklog">ProductBacklog</button>
+    </li>
+{% empty %}
+    <li>No project yet.</li>
+{% endfor %}
+</ul>
