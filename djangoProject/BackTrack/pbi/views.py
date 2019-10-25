@@ -49,7 +49,7 @@ class PbiView(TemplateView):
 
 		def get_context_data(self, **kwargs):
 			ctx = super(PbiView, self).get_context_data(**kwargs)
-			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
+			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Last Sorted', 'Action']
 			ctx['rows'] = Item.objects.all().order_by('order')
 			cumulative = 0
 			for i in ctx['rows']:
