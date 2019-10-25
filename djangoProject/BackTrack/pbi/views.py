@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, UpdateView, CreateView, DeleteView
-from pbi.models import Item
+from pbi.models import Item,Person
 from pbi.forms import ItemForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -7,7 +7,17 @@ from django.db.models import Count, Sum
 
 def index(request):
     return HttpResponseRedirect("/pbi/viewPBI/")
-	
+
+class PersomHomepage(TemplateView):
+		template_name = 'PersonHomePage.html'
+
+		def get_context_data(self, **kwargs):
+			person = self.kwargs['person']
+
+			context = super().get_context_data(**kwargs)
+			context['person']=Person.objects.get(pk = person)
+			return context
+
 class PbiUpdateView(UpdateView):
 		model = Item
 		fields = '__all__'
