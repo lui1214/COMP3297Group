@@ -54,6 +54,15 @@ class PbiView(TemplateView):
 			ctx = super(PbiView, self).get_context_data(**kwargs)
 			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Sorted', 'Action']
 			ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
+			
+			x = 1
+			for i in ctx['rows']:
+				if (i.order != x):
+					i.order = x
+					i.save()
+				i.last_sorted = timezone.now()
+				x+=1
+			
 			cumulative = 0
 			for i in ctx['rows']:
 				i.cumulative_story_point = 0
@@ -61,8 +70,6 @@ class PbiView(TemplateView):
 			for i in ctx['rows']:
 				cumulative = cumulative + i.estimate_of_story_point
 				i.cumulative_story_point = cumulative
-			#	i.last_sorted = timezone.now().replace(microsecond=999999)
-			#	i.save()
 			
 			q = Item.objects.aggregate(itemCount=Count('order'),
 				remainSS=Sum('remaining_sprint_size'),
