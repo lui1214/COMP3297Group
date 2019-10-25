@@ -26,3 +26,15 @@ class Item(models.Model):
 		
 	def get_absolute_url(self):
 		return "/pbi/viewPBI/"
+
+class Person(models.Model):
+	STAT = (
+		('Guest','Guest'),
+		('Developer','Developer'),
+		('ScrumMaster','ScrumMaster'),
+		('ProductOwner','ProductOwner')
+	)
+	name = models.CharField(max_length=200)
+	role = models.CharField(choices=STAT,default='GUEST',max_length=200)
+	def __str__(self):
+		return self.name

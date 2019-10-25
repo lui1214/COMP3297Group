@@ -20,4 +20,7 @@ urlpatterns = [
 	path('deletePBI/<int:pbiDelete_pk>/',
 		views.PbiDeleteView.as_view(),
 		name='deletePBI'),
+	path('PersonHomePage/<int:person>/',
+		views.PersomHomepage.as_view(),
+		name='PersonHomepage')
 ]
