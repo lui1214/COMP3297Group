@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Hello {{person.name}} you are a {{person.role}}</h1>
+<p>this is your project
+	<div class="if/else">
+		{% if person.role == 'Developer'%}
+			<li>product backlog
+				<button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="ProductBacklog">ProductBacklog</button>
+			</li>
+	{% elif person.role == 'ScrumMaster'%}
+		<li>this part is developing</li>
+	{% endif %}
+</p>
+
+</body>
+</html>
