@@ -30,14 +30,27 @@ class Item(models.Model):
 	def get_absolute_url(self):
 		return "/pbi/viewPBI/"
 
+class Project(models.Model):
+	STAT = (
+		('Completed', 'Completed'),
+		('In Progress', 'In Progress'),
+		('Not yet started', 'Not yet started'),
+	)
+	name = models.CharField(default='emptyproject', max_length=200)
+	description = models.CharField(default='emptyproject', max_length=200)
+	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+	def __str__(self):
+		return self.name
+
 class Person(models.Model):
 	STAT = (
 		('Guest','Guest'),
 		('Developer','Developer'),
-		('ScrumMaster','ScrumMaster'),
 		('ProductOwner','ProductOwner')
 	)
 	name = models.CharField(max_length=200)
 	role = models.CharField(choices=STAT,default='GUEST',max_length=200)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	def __str__(self):
 		return self.name
+
