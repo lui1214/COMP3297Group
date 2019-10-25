@@ -52,7 +52,7 @@ class PbiView(TemplateView):
 
 		def get_context_data(self, **kwargs):
 			ctx = super(PbiView, self).get_context_data(**kwargs)
-			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Sorted', 'Action']
+			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
 			ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
 			
 			x = 1
@@ -79,6 +79,32 @@ class PbiView(TemplateView):
 			ctx['remainSS'] = q['remainSS']
 			ctx['totalSS'] = q['totalSS']
 			return ctx
+			
+class PbiCurrentView(TemplateView):
+		template_name = 'pbi_currentList.html'
+
+		def get_context_data(self, **kwargs):
+			ctx = super(PbiCurrentView, self).get_context_data(**kwargs)
+			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
+			ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
+			
+			cumulative = 0
+			for i in ctx['rows']:
+				i.cumulative_story_point = 0
+				
+			for i in ctx['rows']:
+				cumulative = cumulative + i.estimate_of_story_point
+				i.cumulative_story_point = cumulative
+			
+			q = Item.objects.aggregate(itemCount=Count('order'),
+				remainSS=Sum('remaining_sprint_size'),
+				totalSS=Sum('original_sprint_size'),
+			)
+			ctx['itemCount'] = q['itemCount']
+			ctx['remainSS'] = q['remainSS']
+			ctx['totalSS'] = q['totalSS']
+			return ctx
+			
 class PersomHomepage(TemplateView):
 		template_name = 'PersonHomePage.html'
 
