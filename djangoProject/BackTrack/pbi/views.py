@@ -1,6 +1,5 @@
 from django.views.generic import TemplateView, UpdateView, CreateView, DeleteView
 from pbi.models import Item
-from pbi.forms import ItemForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Sum
@@ -34,7 +33,17 @@ class PbiCreateView(CreateView):
 		model = Item
 		fields = '__all__'
 		template_name = 'pbi_new.html'
+
+class PbiDetailView(TemplateView):
+		template_name = 'pbi_detail.html'
 		
+		def get_context_data(self, **kwargs):
+			item = self.kwargs['item']
+			
+			context = super().get_context_data(**kwargs)
+			context['item'] = Item.objects.get(pk=item)
+			return context
+
 class PbiView(TemplateView):
 		template_name = 'pbi_list.html'
 

@@ -18,11 +18,10 @@
 				<td align="center" valign="center">{{ r.cumulative_story_point }}</td>
 				<td align="center" valign="center">{{ r.status }}</td>
 				<td align="center" valign="center">
+				<button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBIdetail/{{ r.pk }}';">View</button>
 				{% if r.status == "Not yet started" %}
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ r.pk }}';">Edit</button>
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ r.pk }}';">Delete</button>
-				{% else %}
-					*Cannot modified started item*
 				{% endif %}
 				</td>
             </tr>
