@@ -5,9 +5,16 @@
 <h1>Hello {{person.name}} you are a {{person.role}}</h1>
 <p>this is your project
 	<div class="if/else">
-		{% if person.role == 'Developer'%}
+		{% if person.role == 'Developer' or person.role == 'ProductOwner'%}
+			<li>project name: {{person.project.name}}
+			</li>
+			<li>project description: {{person.project.description}}
+			</li>
 			<li>product backlog
 				<button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="ProductBacklog">ProductBacklog</button>
+			</li>
+			<li>sprint backlog
+				<button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="SprintBacklog">SprintBacklog</button>
 			</li>
 	{% elif person.role == 'ScrumMaster'%}
 		<li>this part is developing</li>

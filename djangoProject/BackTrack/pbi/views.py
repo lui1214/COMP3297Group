@@ -107,11 +107,13 @@ class PbiCurrentView(TemplateView):
 			
 class PersomHomepage(TemplateView):
 		template_name = 'PersonHomePage.html'
+
 		def get_context_data(self, **kwargs):
 			person = self.kwargs['person']
 			context = super().get_context_data(**kwargs)
 			context['person']=Person.objects.get(pk = person)
 			return context
+
 class ProjectList(ListView):
 	template_name="ProjectList.html"
 	model = Project
