@@ -36,9 +36,11 @@ class Project(models.Model):
 		('In Progress', 'In Progress'),
 		('Not yet started', 'Not yet started'),
 	)
-	name = models.CharField(default='emptyproject', max_length=200)
+	name = models.CharField(max_length=200)
 	description = models.CharField(default='emptyproject', max_length=200)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+	def __str__(self):
+		return self.name
 
 class Person(models.Model):
 	STAT = (
