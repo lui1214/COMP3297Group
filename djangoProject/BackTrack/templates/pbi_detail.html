@@ -5,4 +5,8 @@
 <p><b>Remaining Sprint Size: </b>{{ item.remaining_sprint_size }}</p>
 <p><b>Estimate of Story Point: </b>{{ item.estimate_of_story_point }}</p>
 <p><b>Status: </b>{{ item.status }}</p>
+{% if item.status == "Not yet started" %}
+	<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ item.pk }}';">Edit</button>
+	<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ item.pk }}';">Delete</button>
+{% endif %}
 <button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="Back" type="reset">Back</button>
