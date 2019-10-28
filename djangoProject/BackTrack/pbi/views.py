@@ -60,7 +60,7 @@ class PbiView(TemplateView):
 				if (i.order != x):
 					i.order = x
 					i.save()
-				#i.last_sorted = timezone.now()
+				i.last_sorted = timezone.now()
 				x+=1
 			
 			cumulative = 0
