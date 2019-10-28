@@ -22,8 +22,7 @@ class Item(models.Model):
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	last_modified = models.DateTimeField(auto_now=True, auto_now_add=False, blank=True)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
-	last_sorted = models.DateTimeField(blank=True, editable = False, default=datetime.datetime(1970, 1, 1, 0, 0, 0, 0))
-		
+	
 	def __str__(self):
 		return self.name
 		
