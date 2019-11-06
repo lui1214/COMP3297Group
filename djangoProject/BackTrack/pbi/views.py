@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, UpdateView, CreateView, DeleteView,ListView
-from pbi.models import Item,Person,Project
+from .models import Item,Person,Project,Task,Developer,ScrumMaster,ProductOwner,Sprint
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Count, Sum
@@ -117,3 +117,13 @@ class PersomHomepage(TemplateView):
 class ProjectList(ListView):
 	template_name="ProjectList.html"
 	model = Project
+
+class sprint_backlog(TemplateView):
+	template_name = "sprint_backlog.html"
+	def get_context_data(self, **kwargs):
+		sprint = self.kwargs['sprint']
+		context = super().get_context_data(**kwargs)
+		context['pbi_list'] = Item.objects.filter(sprint__pk = sprint)
+		context['sprint'] = Sprint.objects.get(pk = sprint)
+		context['task_list']= Task.objects.filter(sprint__pk = sprint)
+		return context

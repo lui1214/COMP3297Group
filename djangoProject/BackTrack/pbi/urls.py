@@ -30,5 +30,4 @@ urlpatterns = [
 	path('ProjectList',
 		views.ProjectList.as_view(),
 		name='ProjectList'),
-
 ]

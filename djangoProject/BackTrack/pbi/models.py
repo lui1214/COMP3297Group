@@ -25,10 +25,11 @@ class Sprint(models.Model):
 		('Not yet started', 'Not yet started'),
 	)
 	number = models.IntegerField()
+	capacity = models.IntegerField(blank=True, null=True)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
-	def __str__(self):
+	def __int__(self):
 		return self.number
 
 class Item(models.Model):
@@ -60,7 +61,6 @@ class Person(models.Model):
 	def __str__(self):
 		return self.name
 class ProductOwner(Person):
-	role = 'ProductOwner'
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
 class ScrumMaster(Person):
 	role = 'ScrumMaster'
@@ -80,6 +80,7 @@ class Task(models.Model):
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	item = models.ForeignKey(Item,on_delete=models.CASCADE)
+	sprint = models.ForeignKey(Sprint,on_delete=models.SET_NULL,blank=True, null=True)
 	person = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True)
 	def __str__(self):
 		return self.name
