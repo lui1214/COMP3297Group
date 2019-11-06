@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sprint Backlog</title>
+</head>
+<body>
+{% for item in pbi_list %}
+    <li>---------------item name is {{ item.name }}---------------------------</li>
+    {% for task in task_list %}
+        <div class="if/else">
+            {% if task.item == item %}
+                <li>task name is {{task.name}}.</li>
+            {% endif %}
+            {% empty %}
+                <li>No task yet.</li>
+            {% endfor %}
+            <li>add task</li>
+{% empty %}
+    <li>No item yet.</li>
+{% endfor %}<li>above is all items in this sprint.</li>
+</body>
+</html>

@@ -30,4 +30,6 @@ urlpatterns = [
 	path('ProjectList',
 		views.ProjectList.as_view(),
 		name='ProjectList'),
+	path('sprint_backlog/<int:sprint>/',views.sprint_backlog.as_view(),
+		 name='sprint_backlog')
 ]

@@ -54,7 +54,7 @@ class PbiView(TemplateView):
 			ctx = super(PbiView, self).get_context_data(**kwargs)
 			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
 			ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
-			
+
 			x = 1
 			for i in ctx['rows']:
 				if (i.order != x):
@@ -62,15 +62,15 @@ class PbiView(TemplateView):
 					i.save()
 				#i.last_sorted = timezone.now()
 				x+=1
-			
+
 			cumulative = 0
 			for i in ctx['rows']:
 				i.cumulative_story_point = 0
-				
+
 			for i in ctx['rows']:
 				cumulative = cumulative + i.estimate_of_story_point
 				i.cumulative_story_point = cumulative
-			
+
 			q = Item.objects.aggregate(itemCount=Count('order'),
 				remainSS=Sum('remaining_sprint_size'),
 				totalSS=Sum('original_sprint_size'),
@@ -79,7 +79,7 @@ class PbiView(TemplateView):
 			ctx['remainSS'] = q['remainSS']
 			ctx['totalSS'] = q['totalSS']
 			return ctx
-			
+
 class PbiCurrentView(TemplateView):
 		template_name = 'pbi_currentList.html'
 
@@ -87,15 +87,15 @@ class PbiCurrentView(TemplateView):
 			ctx = super(PbiCurrentView, self).get_context_data(**kwargs)
 			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
 			ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
-			
+
 			cumulative = 0
 			for i in ctx['rows']:
 				i.cumulative_story_point = 0
-				
+
 			for i in ctx['rows']:
 				cumulative = cumulative + i.estimate_of_story_point
 				i.cumulative_story_point = cumulative
-			
+
 			q = Item.objects.aggregate(itemCount=Count('order'),
 				remainSS=Sum('remaining_sprint_size'),
 				totalSS=Sum('original_sprint_size'),
@@ -104,7 +104,7 @@ class PbiCurrentView(TemplateView):
 			ctx['remainSS'] = q['remainSS']
 			ctx['totalSS'] = q['totalSS']
 			return ctx
-			
+
 class PersomHomepage(TemplateView):
 		template_name = 'PersonHomePage.html'
 
@@ -117,13 +117,17 @@ class PersomHomepage(TemplateView):
 class ProjectList(ListView):
 	template_name="ProjectList.html"
 	model = Project
-
+#-------------------sprintbacklog---------------------------------
 class sprint_backlog(TemplateView):
 	template_name = "sprint_backlog.html"
 	def get_context_data(self, **kwargs):
 		sprint = self.kwargs['sprint']
 		context = super().get_context_data(**kwargs)
 		context['pbi_list'] = Item.objects.filter(sprint__pk = sprint)
-		context['sprint'] = Sprint.objects.get(pk = sprint)
 		context['task_list']= Task.objects.filter(sprint__pk = sprint)
+		context['sprint'] = Sprint.objects.get(pk = sprint)
 		return context
+class TaskCreateView(CreateView):
+		model = Item
+		fields = '__all__'
+		template_name = 'task_new.html'
