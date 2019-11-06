@@ -5,3 +5,8 @@ from .models import *
 admin.site.register(Item)
 admin.site.register(Person)
 admin.site.register(Project)
+admin.site.register(ProductOwner)
+admin.site.register(Sprint)
+admin.site.register(ScrumMaster)
+admin.site.register(Developer)
+admin.site.register(Task)

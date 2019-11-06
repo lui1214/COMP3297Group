@@ -6,6 +6,31 @@ import datetime
 import pytz
 
 # Create your models here.
+class Project(models.Model):
+	STAT = (
+		('Completed', 'Completed'),
+		('In Progress', 'In Progress'),
+		('Not yet started', 'Not yet started'),
+	)
+	name = models.CharField(max_length=200)
+	description = models.CharField(default='emptyproject', max_length=200)
+	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+	def __str__(self):
+		return self.name
+
+class Sprint(models.Model):
+	STAT = (
+		('Completed', 'Completed'),
+		('In Progress', 'In Progress'),
+		('Not yet started', 'Not yet started'),
+	)
+	number = models.IntegerField()
+	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	def __str__(self):
+		return self.number
+
 class Item(models.Model):
 	STAT = (
 		('Completed', 'Completed'),
@@ -22,34 +47,39 @@ class Item(models.Model):
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	last_modified = models.DateTimeField(auto_now=True, auto_now_add=False, blank=True)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
-	
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
+	sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, blank=True, null=True)
 	def __str__(self):
 		return self.name
 		
 	def get_absolute_url(self):
 		return "/pbi/viewPBI/"
 
-class Project(models.Model):
+class Person(models.Model):
+	name = models.CharField(max_length=20)
+	def __str__(self):
+		return self.name
+class ProductOwner(Person):
+	role = 'ProductOwner'
+	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
+class ScrumMaster(Person):
+	role = 'ScrumMaster'
+class Developer(Person):
+	role = 'Developer'
+	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
+
+class Task(models.Model):
 	STAT = (
 		('Completed', 'Completed'),
 		('In Progress', 'In Progress'),
 		('Not yet started', 'Not yet started'),
 	)
 	name = models.CharField(max_length=200)
-	description = models.CharField(default='emptyproject', max_length=200)
+	description = models.CharField(max_length=200)
+	hour = models.PositiveIntegerField(default=0, editable=False)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
+	item = models.ForeignKey(Item,on_delete=models.CASCADE)
+	person = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True)
 	def __str__(self):
 		return self.name
-
-class Person(models.Model):
-	STAT = (
-		('Guest','Guest'),
-		('Developer','Developer'),
-		('ProductOwner','ProductOwner')
-	)
-	name = models.CharField(max_length=200)
-	role = models.CharField(choices=STAT,default='GUEST',max_length=200)
-	project = models.ForeignKey(Project, on_delete=models.CASCADE)
-	def __str__(self):
-		return self.name
-
