@@ -6,16 +6,18 @@
 </head>
 <body>
 {% for item in pbi_list %}
-    <li>---------------item name is {{ item.name }}---------------------------</li>
+    <li>---------------item name is {{ item.name }}--------{{item.sprint.id}}-------------------</li>
     {% for task in task_list %}
         <div class="if/else">
             {% if task.item == item %}
-                <li>task name is {{task.name}}  and{{task.id}}.</li>
+                <li>task name is {{task.name}}.
+                	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{task.pk}}';">view</button>
+                </li>
             {% endif %}
             {% empty %}
                 <li>No task yet.</li>
             {% endfor %}
-            <li><button onclick="window.location.href = 'http://localhost:8000/pbi/createTask';">Add task</button></li>
+            <li><button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{item.pk}}';">Add task</button></li>
 {% empty %}
     <li>No item yet.</li>
 {% endfor %}<li>above is all items in this sprint.</li>

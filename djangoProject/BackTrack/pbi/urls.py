@@ -36,7 +36,10 @@ urlpatterns = [
 	path('sprintbacklog/<int:sprint>/',
 		views.sprint_backlog.as_view(),
 		 name='sprintbacklog'),
-	path('createTask/',
+	path('createTask/<int:item>/',
 		views.TaskCreateView.as_view(),
 		name='createTask'),
+	path('viewTask/<int:task>/',
+		views.TaskView.as_view(),
+		name='viewTask'),
 ]

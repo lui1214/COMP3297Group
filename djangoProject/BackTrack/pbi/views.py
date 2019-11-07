@@ -150,7 +150,20 @@ class sprint_backlog(TemplateView):
 		return context
 		
 class TaskCreateView(CreateView):
-		model = Task
-		fields = '__all__'
-		template_name = 'task_create.html'
-		success_url = ''
+	model = Task
+	fields = '__all__'
+	template_name = 'task_create.html'
+
+"""	def get_context_data(self, **kwargs):
+		item = self.kwargs['item']
+		context = super().get_context_data(**kwargs)
+		context['item'] = Item.objects.get(pk=item)
+		return context
+"""
+class TaskView(TemplateView):
+		template_name = 'task_view.html'
+		def get_context_data(self, **kwargs):
+			task = self.kwargs['task']
+			context = super().get_context_data(**kwargs)
+			context['task'] = Task.objects.get(pk=task)
+			return context

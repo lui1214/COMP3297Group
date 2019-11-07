@@ -84,4 +84,5 @@ class Task(models.Model):
 	def __str__(self):
 		return self.name
 	def get_absolute_url(self):
-		return "/pbi/sprintbacklog/%i/" % self.sprint.id
+		tsprint=self.sprint
+		return "/pbi/viewTask/%i/" % self.id
