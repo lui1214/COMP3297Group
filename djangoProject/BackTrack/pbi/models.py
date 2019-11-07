@@ -29,8 +29,8 @@ class Sprint(models.Model):
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
-	def __int__(self):
-		return self.number
+	def __str__(self):
+		return self.project.name+' Sprint '+str(self.number)
 
 class Item(models.Model):
 	STAT = (
@@ -76,7 +76,7 @@ class Task(models.Model):
 	)
 	name = models.CharField(max_length=200)
 	description = models.CharField(max_length=200)
-	hour = models.PositiveIntegerField(default=0, editable=False)
+	hour = models.PositiveIntegerField(blank=True, null=True)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	item = models.ForeignKey(Item,on_delete=models.CASCADE)

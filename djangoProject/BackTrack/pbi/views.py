@@ -128,6 +128,6 @@ class sprint_backlog(TemplateView):
 		context['sprint'] = Sprint.objects.get(pk = sprint)
 		return context
 class TaskCreateView(CreateView):
-		model = Item
+		model = Task
 		fields = '__all__'
-		template_name = 'task_new.html'
+		template_name = 'task_create.html'

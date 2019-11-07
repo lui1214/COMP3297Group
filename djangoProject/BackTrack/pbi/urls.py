@@ -24,12 +24,18 @@ urlpatterns = [
 		views.PbiDeleteView.as_view(),
 		name='deletePBI'),
 
+	#---------------person---------------------------------------------------#
 	path('PersonHomePage/<int:person>/',
 		views.PersomHomepage.as_view(),
 		name='PersonHomepage'),
 	path('ProjectList',
 		views.ProjectList.as_view(),
 		name='ProjectList'),
-	path('sprint_backlog/<int:sprint>/',views.sprint_backlog.as_view(),
-		 name='sprint_backlog')
+
+	#-------sprintbacklog--------------------------------------------------------#
+	path('sprintbacklog/<int:sprint>/',views.sprint_backlog.as_view(),
+		 name='sprintbacklog'),
+	path('createTask',
+		views.TaskCreateView.as_view(),
+		name='createTask'),
 ]
