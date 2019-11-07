@@ -83,3 +83,5 @@ class Task(models.Model):
 	person = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True)
 	def __str__(self):
 		return self.name
+	def get_absolute_url(self):
+		return "/pbi/sprintbacklog/%i/" % self.sprint.id

@@ -153,3 +153,4 @@ class TaskCreateView(CreateView):
 		model = Task
 		fields = '__all__'
 		template_name = 'task_create.html'
+		success_url = ''

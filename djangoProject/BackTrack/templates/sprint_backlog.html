@@ -10,7 +10,7 @@
     {% for task in task_list %}
         <div class="if/else">
             {% if task.item == item %}
-                <li>task name is {{task.name}}.</li>
+                <li>task name is {{task.name}}  and{{task.id}}.</li>
             {% endif %}
             {% empty %}
                 <li>No task yet.</li>
