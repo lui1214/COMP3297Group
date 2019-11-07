@@ -33,22 +33,11 @@ class PbiDeleteView(DeleteView):
 			obj = get_object_or_404(Item, pk=snum)
 			return obj
 
-"""
 class PbiCreateView(CreateView):
 		model = Item
 		fields = '__all__'
 		template_name = 'pbi_new.html'
-"""
-
-def PbiCreateView(request):
-	PbiFormSet = modelformset_factory(Item, fields = ('name', 'description',))
-	if request.method == 'POST':
-		formset = PbiFormSet(request.POST, request.FILES)
-		if formset.is_valid():
-			formset.save()
-	else:
-		formset = PbiFormSet()
-	return render(request, 'pbi_new.html', {'formset': formset})
+        
 	
 class PbiDetailView(TemplateView):
 		template_name = 'pbi_detail.html'
