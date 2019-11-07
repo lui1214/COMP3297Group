@@ -41,7 +41,6 @@ class Item(models.Model):
 	order = models.PositiveIntegerField()
 	name = models.CharField(max_length=200)
 	description = models.CharField(max_length=200)
-	original_sprint_size = models.PositiveIntegerField()
 	remaining_sprint_size = models.PositiveIntegerField()
 	estimate_of_story_point = models.PositiveIntegerField()
 	cumulative_story_point = models.PositiveIntegerField(default=0, editable=False)

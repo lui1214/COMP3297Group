@@ -15,7 +15,7 @@ urlpatterns = [
 		views.PbiCurrentView.as_view(),
 		name='viewCurrentPBI'),
 	path('createPBI/',
-		views.PbiCreateView.as_view(),
+		views.PbiCreateView,
 		name='createPBI'),
 	path('updatePBI/<int:pbiUpdate_pk>/',
 		views.PbiUpdateView.as_view(),

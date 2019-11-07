@@ -6,6 +6,7 @@ from django.db.models import Count, Sum
 from datetime import datetime
 import datetime
 from django.utils import timezone
+from django.forms import modelformset_factory
 
 def index(request):
     return HttpResponseRedirect("/pbi/viewPBI/")
@@ -32,11 +33,23 @@ class PbiDeleteView(DeleteView):
 			obj = get_object_or_404(Item, pk=snum)
 			return obj
 
+"""
 class PbiCreateView(CreateView):
 		model = Item
 		fields = '__all__'
 		template_name = 'pbi_new.html'
+"""
 
+def PbiCreateView(request):
+	PbiFormSet = modelformset_factory(Item, fields = ('name', 'description',))
+	if request.method == 'POST':
+		formset = PbiFormSet(request.POST, request.FILES)
+		if formset.is_valid():
+			formset.save()
+	else:
+		formset = PbiFormSet()
+	return render(request, 'pbi_new.html', {'formset': formset})
+	
 class PbiDetailView(TemplateView):
 		template_name = 'pbi_detail.html'
 		
@@ -47,12 +60,13 @@ class PbiDetailView(TemplateView):
 			context['item'] = Item.objects.get(pk=item)
 			return context
 
+
 class PbiView(TemplateView):
 		template_name = 'pbi_list.html'
 
 		def get_context_data(self, **kwargs):
 			ctx = super(PbiView, self).get_context_data(**kwargs)
-			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Original Sprint Size','Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
+			ctx['header'] = ['Order', 'Feature Name', 'Description', 'Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
 			ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
 
 			x = 1
@@ -73,7 +87,7 @@ class PbiView(TemplateView):
 
 			q = Item.objects.aggregate(itemCount=Count('order'),
 				remainSS=Sum('remaining_sprint_size'),
-				totalSS=Sum('original_sprint_size'),
+				totalSS=Sum('estimate_of_story_point'),
 			)
 			ctx['itemCount'] = q['itemCount']
 			ctx['remainSS'] = q['remainSS']
