@@ -1,16 +1,27 @@
-<h1>Showing all projects</h1>
-<ul>
-{% for project in object_list %}
-    <li>
-        project name is {{ project.name }}
-    </li>
-    <li>
-        discription: {{project.discription}}
-    </li>
-    <li>
-        <button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="GoIntoProductBacklog">ProductBacklog</button>
-    </li>
-{% empty %}
-    <li>No project yet.</li>
-{% endfor %}
-</ul>
+<h1 align="center">Showing all projects</h1>
+<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
+    <thead>
+        <tr>
+            {% for k in header %}
+            <th>{{k}}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for r in rows %}
+            <tr>
+				<td align="center" valign="center">{{ r.name }}</td>
+                <td align="center" valign="center">{{ r.description }}</td>
+                <td align="center" valign="center">
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="GoIntoProductBacklog">ProductBacklog</button>
+				</td>
+            </tr>
+		{% empty %}
+			<tr>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*nothing to be done*</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

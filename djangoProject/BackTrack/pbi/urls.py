@@ -33,7 +33,8 @@ urlpatterns = [
 		name='ProjectList'),
 
 	#-------sprintbacklog--------------------------------------------------------#
-	path('sprintbacklog/<int:sprint>/',views.sprint_backlog.as_view(),
+	path('sprintbacklog/<int:sprint>/',
+		views.sprint_backlog.as_view(),
 		 name='sprintbacklog'),
 	path('createTask/',
 		views.TaskCreateView.as_view(),

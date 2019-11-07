@@ -114,9 +114,16 @@ class PersomHomepage(TemplateView):
 			context['person']=Person.objects.get(pk = person)
 			return context
 
-class ProjectList(ListView):
+class ProjectList(TemplateView):
 	template_name="ProjectList.html"
 	model = Project
+	
+	def get_context_data(self, **kwargs):
+		ctx = super(ProjectList, self).get_context_data(**kwargs)
+		ctx['header'] = ['Project Name', 'Description', 'Action']
+		ctx['rows'] = Project.objects.all()
+		return ctx
+		
 #-------------------sprintbacklog---------------------------------
 class sprint_backlog(TemplateView):
 	template_name = "sprint_backlog.html"
@@ -127,6 +134,7 @@ class sprint_backlog(TemplateView):
 		context['task_list']= Task.objects.filter(sprint__pk = sprint)
 		context['sprint'] = Sprint.objects.get(pk = sprint)
 		return context
+		
 class TaskCreateView(CreateView):
 		model = Task
 		fields = '__all__'
