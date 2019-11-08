@@ -5,22 +5,26 @@
     <title>Sprint Backlog</title>
 </head>
 <body>
-{% for item in pbi_list %}
 	<!--
-    <li>---------------item name is {{ item.name }}--------{{ item.sprint.id }}-------------------</li>
-    {% for task in task_list %}
-        <div class="if/else">
-            {% if task.item == item %}
-                <li>task name is {{task.name}}.
-                	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{task.pk}}';">view</button>
-                </li>
-            {% endif %}
+	{% for item in pbi_list %}
+		<li>---------------item name is {{ item.name }}--------{{ item.sprint.id }}-------------------</li>
+		{% for task in task_list %}
+			<div class="if/else">
+				{% if task.item == item %}
+					<li>task name is {{task.name}}.
+						<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{task.pk}}';">view</button>
+					</li>
+				{% endif %}
             {% empty %}
                 <li>No task yet.</li>
-    {% endfor %}
+		{% endfor %}
             <li><button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{item.pk}}';">Add task</button></li>
+		{% empty %}
+			<p>No item yet.</p>
+	{% endfor %}
 	-->
 	
+	{% for item in pbi_list %}
 	<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
     <thead>
         <tr>
@@ -35,7 +39,8 @@
         </tr>
     </thead>
     <tbody>
-        {% for task in task_list %}
+	
+		{% for task in task_list %}
 			 <div class="if/else">
 			{% if task.item == item %}
             <tr>
@@ -80,13 +85,13 @@
             </tr>
 			
         {% endfor %}
+		
     </tbody>
 	</table>
+	{% empty %}
+			<p>No item yet.</p>
+	{% endfor %}
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{ item.pk }}';">Add task</button>
 	
-	<hr>
-	{% empty %}
-		<p>No item yet.</p>
-{% endfor %}
 </body>
 </html>
