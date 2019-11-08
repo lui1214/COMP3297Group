@@ -23,7 +23,9 @@ class PbiUpdateView(UpdateView):
 		snum = int(self.kwargs.get(self.pk_pbiUpdate_kwargs,None))
 		obj = get_object_or_404(Item, pk=snum)
 		return obj
-			
+	def get_success_url(self):
+		return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
+
 class PbiDeleteView(DeleteView):
 	model = Item
 	template_name = 'pbi_delete.html'
@@ -34,13 +36,17 @@ class PbiDeleteView(DeleteView):
 		snum = int(self.kwargs.get(self.pk_pbiDelete_kwargs,None))
 		obj = get_object_or_404(Item, pk=snum)
 		return obj
+	def get_success_url(self):
+		return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
 
 class PbiCreateView(CreateView):
 	model = Item
 	fields = '__all__'
 	#fields = ['order']
 	template_name = 'pbi_new.html'
-	success_url = '/pbi/viewPBI/'    
+	success_url = '/pbi/viewPBI/'
+	def get_success_url(self):
+		return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
 	
 class PbiDetailView(TemplateView):
 	template_name = 'pbi_detail.html'
