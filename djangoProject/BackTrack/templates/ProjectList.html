@@ -13,7 +13,8 @@
 				<td align="center" valign="center">{{ r.name }}</td>
                 <td align="center" valign="center">{{ r.description }}</td>
                 <td align="center" valign="center">
-					<button onclick="window.location.href = 'http://localhost:8000/pbi/viewPBI/';" value="GoIntoProductBacklog">ProductBacklog</button>
+					<p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ r.pk }}';" value="GoIntoProductBacklog">View Product Backlog</button></p>
+					<p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ r.pk }}';">View Sprints</button></p>
 				</td>
             </tr>
 		{% empty %}

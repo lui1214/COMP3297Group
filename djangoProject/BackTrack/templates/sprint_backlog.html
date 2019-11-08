@@ -3,30 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Sprint Backlog</title>
-	<b>{{sprint.project.name}}</b><br>
-	Sprint {{sprint.number}}
+	<h1 align="center">{{sprint.project.name}}</h1>
+	<h2 align="center">Sprint {{sprint.number}}</h2>
 </head>
 <body>
-	<!--
-	{% for item in pbi_list %}
-		<li>---------------item name is {{ item.name }}--------{{ item.sprint.id }}-------------------</li>
-		{% for task in task_list %}
-			<div class="if/else">
-				{% if task.item == item %}
-					<li>task name is {{task.name}}.
-						<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{task.pk}}';">view</button>
-					</li>
-				{% endif %}
-            {% empty %}
-                <li>No task yet.</li>
-		{% endfor %}
-            <li><button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{item.pk}}';">Add task</button></li>
-		{% empty %}
-			<p>No item yet.</p>
-	{% endfor %}
-	-->
-	
-	
 	<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
     <thead>
         <tr>
@@ -42,6 +22,7 @@
     </thead>
     <tbody>
 	{% for item in pbi_list %}
+			{% if item.added == True %}
             <tr>
 				<td align="center" valign="center">{{ item.name }}</td>
 				
@@ -115,6 +96,7 @@
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{ item.pk }}';">Add task</button>
 				</td>
             </tr>
+			{% endif %}
 			{% empty %}
 			<tr>
 				<td align="center" valign="center">*empty*</td>
@@ -126,7 +108,6 @@
 				<td align="center" valign="center">*empty*</td>
 				<td align="center" valign="center">*nothing to be done*</td>
             </tr>
-			
 	{% endfor %}
 	<tr>
 		<td align="center" valign="center">Total</td>
@@ -142,7 +123,11 @@
 	</table>
 	
 	
-<br><b>Maximum effort hour: </b>{{sprint.capacity}}</br>
-<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ sprint.project.pk }}';">back</button>
+	<p align="center"><b>Maximum effort hour: </b>{{sprint.capacity}}</p>
+	<p align="center">
+		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ sprint.project.pk }}';">View Product Backlog</button>
+		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ sprint.project.pk }}';">Back</button>
+	</p>
+	
 </body>
 </html>

@@ -9,6 +9,7 @@
     </thead>
     <tbody>
         {% for r in rows %}
+			{% if r.status != "Completed" %}
             <tr>
 				<td align="center" valign="center">{{ r.order }}</td>
 				<td align="center" valign="center">{{ r.name }}</td>
@@ -27,12 +28,13 @@
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ r.pk }}';">Delete</button>
 				{% endif %}
 				{% if r.added == False %}
-					<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiAddToSprintView/{{ r.pk }}';">Add to Sprint Backlog</button>
+					<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiAddToSprintView/{{ r.pk }}';">Add to Sprint Backlog</button
 				{% else %}
 					<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiRemoveFromSprintView/{{ r.pk }}';">Remove From Sprint Backlog</button>
 				{% endif %}
 				</td>
             </tr>
+			{% endif %}
 		{% empty %}
 			<tr>
 				<td align="center" valign="center">*empty*</td>
@@ -52,8 +54,8 @@
 
 <p align="center">
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/createPBI/';">Add new PBI</button>
-	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewCurrentProductbacklog/{{row1.project.pk}}';">Switch to current view</button>
-	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{row1.project.pk}}';">View Sprints</button>
+	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{row1.project.pk}}';">Switch to full view</button>
+    <button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{row1.project.pk}}';">View Sprints</button>
     <button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectList/';">Back</button>
 </p>
 

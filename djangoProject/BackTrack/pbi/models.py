@@ -54,6 +54,7 @@ class Item(models.Model):
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
 	sprint = models.ForeignKey(Sprint, on_delete=models.SET_NULL, blank=True, null=True)
+	added = models.BooleanField(default=False, editable=False)
 	def __str__(self):
 		return self.name
 		
@@ -68,14 +69,20 @@ class Person(models.Model):
 class ProductOwner(Person):
 	role = 'ProductOwner'
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
+	def __str__(self):
+		return self.role
 
 class ScrumMaster(Person):
 	role = 'ScrumMaster'
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
+	def __str__(self):
+		return self.role
 
 class Developer(Person):
 	role = 'Developer'
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
+	def __str__(self):
+		return self.role
 
 class Task(models.Model):
 	STAT = (

@@ -11,7 +11,7 @@ from django.forms import modelformset_factory
 from django.urls import reverse_lazy, reverse
 
 def index(request):
-    return HttpResponseRedirect("/pbi/viewProject/4/")
+    return HttpResponseRedirect("/pbi/ProjectList/")
 	
 class PbiUpdateView(UpdateView):
 	model = Item
@@ -57,40 +57,23 @@ class PbiDetailView(TemplateView):
 		context = super().get_context_data(**kwargs)
 		context['item'] = Item.objects.get(pk=item)
 		return context
-
-class PbiView(TemplateView):
-	template_name = 'pbi_list.html'
-
-	def get_context_data(self, **kwargs):
-		ctx = super(PbiView, self).get_context_data(**kwargs)
-		ctx['header'] = ['Order', 'Feature Name', 'Description', 'Sprint', 'Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
-		ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
-
-		x = 1
-		for i in ctx['rows']:
-			if (i.order != x):
-				i.order = x
-				i.save()
-			#i.last_sorted = timezone.now()
-			x+=1
-
-		cumulative = 0
-		for i in ctx['rows']:
-			i.cumulative_story_point = 0
-
-		for i in ctx['rows']:
-			cumulative = cumulative + i.estimate_of_story_point
-			i.cumulative_story_point = cumulative
-
-		q = Item.objects.aggregate(itemCount=Count('order'),
-			remainSS=Sum('remaining_sprint_size'),
-			totalSS=Sum('estimate_of_story_point'),
-		)
 		
-		ctx['itemCount'] = q['itemCount']
-		ctx['remainSS'] = q['remainSS']
-		ctx['totalSS'] = q['totalSS']
-		return ctx
+		
+def PbiAddToSprintView(request, pbi_pk):
+	obj = get_object_or_404(Item, pk=pbi_pk)
+	obj.added = True
+	obj.save()
+	
+	return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.project.id)
+	
+def PbiRemoveFromSprintView(request, pbi_pk):
+	obj = get_object_or_404(Item, pk=pbi_pk)
+	obj.added = False
+	obj.save()
+	
+	return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.project.id)
+
+"""
 class PbiView(TemplateView):
 	template_name = 'pbi_list.html'
 
@@ -124,6 +107,7 @@ class PbiView(TemplateView):
 		ctx['remainSS'] = q['remainSS']
 		ctx['totalSS'] = q['totalSS']
 		return ctx
+
 class PbiCurrentView(TemplateView):
 	template_name = 'pbi_currentList.html'
 	
@@ -149,7 +133,7 @@ class PbiCurrentView(TemplateView):
 		ctx['remainSS'] = q['remainSS']
 		ctx['totalSS'] = q['totalSS']
 		return ctx
-
+"""
 #-------------------------person----------------------------------------------------
 class PersomHomepage(TemplateView):
 	template_name = 'PersonHomePage.html'
@@ -216,6 +200,35 @@ class PbiProjectView(TemplateView):
 		ctx['remainSS'] = q['remainSS']
 		ctx['totalSS'] = q['totalSS']
 		return ctx
+		
+class PbiProjectCurrentView(TemplateView):
+	template_name = 'product_backlog_current.html'
+	def get_context_data(self, **kwargs):
+		project = self.kwargs['project']
+		ctx = super().get_context_data(**kwargs)
+		ctx = super(PbiProjectCurrentView, self).get_context_data(**kwargs)
+		ctx['header'] = ['Order', 'Feature Name', 'Description', 'Sprint', 'Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
+		ctx['rows'] = Item.objects.filter(project__pk = project).order_by('order', '-last_modified')
+		ctx['row1']=ctx['rows'][0]
+
+		cumulative = 0
+		for i in ctx['rows']:
+			i.cumulative_story_point = 0
+
+		for i in ctx['rows']:
+			cumulative = cumulative + i.estimate_of_story_point
+			i.cumulative_story_point = cumulative
+
+		q = Item.objects.aggregate(itemCount=Count('order'),
+			remainSS=Sum('remaining_sprint_size'),
+			totalSS=Sum('estimate_of_story_point'),
+		)
+
+		ctx['itemCount'] = q['itemCount']
+		ctx['remainSS'] = q['remainSS']
+		ctx['totalSS'] = q['totalSS']
+		return ctx
+		
 class SprintCreateView(CreateView):
 	model = Sprint
 	fields = '__all__'
@@ -238,30 +251,32 @@ class viewSprintBacklog(TemplateView):
 		total = []
 		
 		for i in context['task_list']:
-			if i.status=="Completed":
-				done = done + i.hour
-			elif i.status=="In Progress":
-				ip = ip + i.hour
-			else:
-				nys = nys + i.hour
+			if i.item.added == True:
+				if i.status=="Completed":
+					done = done + i.hour
+				elif i.status=="In Progress":
+					ip = ip + i.hour
+				else:
+					nys = nys + i.hour
 				
 		for i in context['pbi_list']:
 			for j in context['task_list']:
-				if j.item.name == i.name:
-					k = next((p for p in total if p["name"] == j.item.name), False)
-					if k == False:
-						if j.status == "Completed":
-							nameDict = { "name" : j.item.name, "remain" : 0, "burn" : j.hour, "totalDone": j.hour}
-							total.append(nameDict)
+				if j.item.added == True:
+					if j.item.name == i.name:
+						k = next((p for p in total if p["name"] == j.item.name), False)
+						if k == False:
+							if j.status == "Completed":
+								nameDict = { "name" : j.item.name, "remain" : 0, "burn" : j.hour, "totalDone": j.hour}
+								total.append(nameDict)
+							else:
+								nameDict = { "name" : j.item.name, "remain" : j.hour, "burn" : 0, "totalDone": j.hour}
+								total.append(nameDict)
 						else:
-							nameDict = { "name" : j.item.name, "remain" : j.hour, "burn" : 0, "totalDone": j.hour}
-							total.append(nameDict)
-					else:
-						if j.status == "Completed":
-							k["burn"] = k["burn"] + j.hour
-						else:
-							k["remain"] = k["remain"] + j.hour
-						k["totalDone"] = k["totalDone"] +j.hour
+							if j.status == "Completed":
+								k["burn"] = k["burn"] + j.hour
+							else:
+								k["remain"] = k["remain"] + j.hour
+							k["totalDone"] = k["totalDone"] +j.hour
 				
 		context['nys'] = nys
 		context['ip'] = ip

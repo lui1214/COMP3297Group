@@ -5,15 +5,10 @@ urlpatterns = [
 	path('', 
 		views.index, 
 		name='index'),
+	#---------------Product Backlog---------------------------------------------------#
 	path('viewPBIdetail/<int:item>/',
 		views.PbiDetailView.as_view(),
 		name='viewPBIdetail'),
-	path('viewPBI/',
-		views.PbiView.as_view(),
-		name='viewPBI'),
-	path('viewCurrentPBI/',
-		views.PbiCurrentView.as_view(),
-		name='viewCurrentPBI'),
 	path('createPBI/',
 		views.PbiCreateView.as_view(),
 		name='createPBI'),
@@ -23,11 +18,24 @@ urlpatterns = [
 	path('deletePBI/<int:pbiDelete_pk>/',
 		views.PbiDeleteView.as_view(),
 		name='deletePBI'),
+	path('viewProductbacklog/<int:project>/',
+		 views.PbiProjectView.as_view(),
+		 name='viewProductbacklog'),
+	path('viewCurrentProductbacklog/<int:project>/',
+		 views.PbiProjectCurrentView.as_view(),
+		 name='viewCurrentProductbacklog'),
+	path('PbiAddToSprintView/<int:pbi_pk>/',
+		 views.PbiAddToSprintView,
+		 name='PbiAddToSprintView'),
+	path('PbiRemoveFromSprintView/<int:pbi_pk>/',
+		 views.PbiRemoveFromSprintView,
+		 name='PbiRemoveFromSprintView'),
 
 	#---------------person---------------------------------------------------#
 	path('PersonHomePage/<int:person>/',
 		views.PersomHomepage.as_view(),
 		name='PersonHomepage'),
+		
 	#-----------project--------------------------------------------------#
 	path('ProjectList/',
 		views.ProjectList.as_view(),
@@ -35,9 +43,7 @@ urlpatterns = [
 	path('viewProject/<int:project>/',
 		 views.ProjectView.as_view(),
 		 name='ProjectView'),
-	path('viewProductbacklog/<int:project>/',
-		 views.PbiProjectView.as_view(),
-		 name='viewProductbacklog'),
+		 
 	#-------sprintbacklog--------------------------------------------------------#
 	path('viewSprintBacklog/<int:sprint>/',
 		views.viewSprintBacklog.as_view(),
