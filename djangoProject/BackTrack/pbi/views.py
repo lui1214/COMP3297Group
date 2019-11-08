@@ -11,7 +11,7 @@ from django.forms import modelformset_factory
 from django.urls import reverse_lazy, reverse
 
 def index(request):
-    return HttpResponseRedirect("/pbi/viewPBI/")
+    return HttpResponseRedirect("/pbi/viewProject/4/")
 	
 class PbiUpdateView(UpdateView):
 	model = Item
@@ -178,6 +178,7 @@ class ProjectView(TemplateView):
 		context['project'] = Project.objects.get(pk=project)
 		context['developer_list'] = Developer.objects.filter(project__pk = project)
 		context['productowner_list'] = ProductOwner.objects.filter(project__pk = project)
+		context['scrummaster_list'] = ScrumMaster.objects.filter(project__pk = project)
 		context['sprint_list'] = Sprint.objects.filter(project__pk = project)
 		return context
 

@@ -66,10 +66,12 @@ class Person(models.Model):
 		return self.name
 		
 class ProductOwner(Person):
+	role = 'ProductOwner'
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
 
 class ScrumMaster(Person):
 	role = 'ScrumMaster'
+	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
 
 class Developer(Person):
 	role = 'Developer'
