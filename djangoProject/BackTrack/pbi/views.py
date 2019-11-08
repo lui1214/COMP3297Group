@@ -231,6 +231,7 @@ class viewSprintBacklog(TemplateView):
 				ip = ip + i.hour
 			else:
 				nys = nys + i.hour
+				
 		for i in context['pbi_list']:
 			for j in context['task_list']:
 				if j.item.name == i.name:

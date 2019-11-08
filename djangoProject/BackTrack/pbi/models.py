@@ -63,10 +63,13 @@ class Person(models.Model):
 	name = models.CharField(max_length=20)
 	def __str__(self):
 		return self.name
+		
 class ProductOwner(Person):
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
+
 class ScrumMaster(Person):
 	role = 'ScrumMaster'
+
 class Developer(Person):
 	role = 'Developer'
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
@@ -85,8 +88,10 @@ class Task(models.Model):
 	item = models.ForeignKey(Item,on_delete=models.CASCADE)
 	sprint = models.ForeignKey(Sprint,on_delete=models.SET_NULL,blank=True, null=True)
 	person = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True)
+	
 	def __str__(self):
 		return self.name
+		
 	def get_absolute_url(self):
 		tsprint=self.sprint
 		return "/pbi/viewTask/%i/" % self.id
