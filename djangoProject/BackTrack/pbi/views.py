@@ -171,6 +171,7 @@ class ProjectView(TemplateView):
 		context = super().get_context_data(**kwargs)
 		context['project'] = Project.objects.get(pk=project)
 		context['developer_list'] = Developer.objects.filter(project__pk = project)
+		context['productowner_list'] = ProductOwner.objects.filter(project__pk = project)
 		context['sprint_list'] = Sprint.objects.filter(project__pk = project)
 		return context
 

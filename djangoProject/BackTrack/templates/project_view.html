@@ -6,11 +6,14 @@
 </head>
 <br>
     <br><b>project name:</b> {{project.name}}</br>
-    <br><button onclick="window.location.href = 'http://localhost:8000/pbi/viewCurrentPBI/';" value="ProductBacklog">ProductBacklog</button></br>
+    <p><b>Descriptions:  </b>{{project.description}}
+    </p>
+    <br><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{project.pk}}';" value="ProductBacklog">ProductBacklog</button></br>
     {% for sprint in sprint_list %}
         <br>Sprint {{sprint.number}}
         <b>  Status:</b>   {{sprint.status}}
         <b>  Create Time:</b>   {{sprint.create_at}}</br>
+        <b>  End Time:</b>   {{sprint.end_at}}</br>
         <br><button onclick="window.location.href = 'http://localhost:8000/pbi/viewSprintBacklog/{{sprint.pk}}';"
                     value="SprintBacklog">SprintBacklog</button></br>
         {% empty %}

@@ -28,6 +28,7 @@ class Sprint(models.Model):
 	capacity = models.IntegerField(blank=True, null=True)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
+	end_at = models.DateTimeField(blank=True, null=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	
 	#def __str__(self):
@@ -85,8 +86,8 @@ class Task(models.Model):
 	hour = models.PositiveIntegerField(blank=True, null=True)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
-	item = models.ForeignKey(Item,on_delete=models.CASCADE)
-	sprint = models.ForeignKey(Sprint,on_delete=models.SET_NULL,blank=True, null=True)
+	item = models.ForeignKey(Item,on_delete=models.CASCADE,blank=True, null=True)
+	sprint = models.ForeignKey(Sprint,on_delete=models.CASCADE,blank=True, null=True)
 	person = models.ForeignKey(Person, on_delete=models.SET_NULL, blank=True, null=True)
 	
 	def __str__(self):
