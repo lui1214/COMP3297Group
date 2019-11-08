@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sprint Backlog</title>
+	<br><b>{{sprint.project.name}}</b>    sprint {{sprint.number}}</br>
 </head>
 <body>
 	<!--
@@ -140,6 +141,7 @@
 	</table>
 	
 	
-	
+<br><b>Maximum hour</b>{{sprint.capacity}}</br>
+<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ sprint.project.pk }}';">back</button>
 </body>
 </html>
