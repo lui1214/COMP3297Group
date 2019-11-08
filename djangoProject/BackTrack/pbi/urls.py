@@ -35,6 +35,9 @@ urlpatterns = [
 	path('viewProject/<int:project>',
 		 views.ProjectView.as_view(),
 		 name='ProjectView'),
+	path('viewProductbacklog/<int:project>',
+		 views.PbiProjectView.as_view(),
+		 name='viweProductbacklog'),
 	#-------sprintbacklog--------------------------------------------------------#
 	path('viewSprintBacklog/<int:sprint>/',
 		views.viewSprintBacklog.as_view(),
