@@ -6,7 +6,8 @@
 </head>
 <body>
 {% for item in pbi_list %}
-    <li>---------------item name is {{ item.name }}--------{{item.sprint.id}}-------------------</li>
+	<!--
+    <li>---------------item name is {{ item.name }}--------{{ item.sprint.id }}-------------------</li>
     {% for task in task_list %}
         <div class="if/else">
             {% if task.item == item %}
@@ -16,10 +17,76 @@
             {% endif %}
             {% empty %}
                 <li>No task yet.</li>
-            {% endfor %}
+    {% endfor %}
             <li><button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{item.pk}}';">Add task</button></li>
-{% empty %}
-    <li>No item yet.</li>
-{% endfor %}<li>above is all items in this sprint.</li>
+	-->
+	
+	<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
+    <thead>
+        <tr>
+            <th>Feature</th>
+			<th>Not Yet Started</th>
+			<th>In Progress</th>
+			<th>Done</th>
+			<th>Total Burndown Hours</th>
+			<th>Total Remaining Hours</th>
+			<th>Total Effort Hours</th>
+			<th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in task_list %}
+			 <div class="if/else">
+			{% if task.item == item %}
+            <tr>
+				{% if forloop.first %}
+					<td rowspan="{{ task_list|length }}" align="center" valign="center">{{ task.item }}</td>
+				{% endif %}
+				<td align="center" valign="center">
+					{% if task.status == "Not yet started" %}
+						<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}</p>
+					{% endif %}
+				</td>
+				<td align="center" valign="center">
+					{% if task.status == "In Progress" %}
+						<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}</p>
+					{% endif %}
+				</td>
+				<td align="center" valign="center">
+					{% if task.status == "Completed" %}
+						<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}</p>
+					{% endif %}
+				</td>
+				<td align="center" valign="center">{{ task.hour }}</td>
+				<td align="center" valign="center">{{ task.hour }}</td>
+				<td align="center" valign="center">{{ task.hour }}</td>
+				<td align="center" valign="center">
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/editTask/{{ task.pk }}';">Edit</button>
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+				</td>
+            </tr>
+			{% endif %}
+			{% empty %}
+			<tr>
+				<td align="center" valign="center">*empty*</td>
+                <td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*empty*</td>
+				<td align="center" valign="center">*nothing to be done*</td>
+            </tr>
+			
+        {% endfor %}
+    </tbody>
+	</table>
+	<button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{ item.pk }}';">Add task</button>
+	
+	<hr>
+	{% empty %}
+		<p>No item yet.</p>
+{% endfor %}
 </body>
 </html>

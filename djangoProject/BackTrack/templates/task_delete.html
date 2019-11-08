@@ -1,0 +1,6 @@
+<form method="post">
+	{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm">
+	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewSprintBacklog/{{ object.sprint }}';" value="Back" type="reset">Back</button>
+</form>

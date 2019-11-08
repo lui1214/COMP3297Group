@@ -29,6 +29,10 @@ class Sprint(models.Model):
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	
+	#def __str__(self):
+	#	return self.number
+	
 	def __str__(self):
 		return self.project.name+' Sprint '+str(self.number)
 

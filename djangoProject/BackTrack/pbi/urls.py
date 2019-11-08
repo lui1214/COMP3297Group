@@ -33,8 +33,8 @@ urlpatterns = [
 		name='ProjectList'),
 
 	#-------sprintbacklog--------------------------------------------------------#
-	path('sprintbacklog/<int:sprint>/',
-		views.sprint_backlog.as_view(),
+	path('viewSprintBacklog/<int:sprint>/',
+		views.viewSprintBacklog.as_view(),
 		 name='sprintbacklog'),
 	path('createTask/<int:item>/',
 		views.TaskCreateView.as_view(),
@@ -42,4 +42,7 @@ urlpatterns = [
 	path('viewTask/<int:task>/',
 		views.TaskView.as_view(),
 		name='viewTask'),
+	path('deleteTask/<int:taskDelete_pk>/',
+		views.TaskDeleteView.as_view(),
+		name='deleteTask'),
 ]

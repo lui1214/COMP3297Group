@@ -6,4 +6,4 @@
 <p><b>PBI </b>{{ task.item }}</p>
 <button onclick="window.location.href = 'http://localhost:8000/pbi/editTask/{{ task.pk }}';">Edit</button>
 <button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
-<button onclick="window.location.href = 'http://localhost:8000/pbi/sprintbacklog/{{ task.sprint.pk }}';" value="Back" type="reset">Back</button>
+<button onclick="window.location.href = 'http://localhost:8000/pbi/viewSprintBacklog/{{ task.sprint.id }}';" value="Back" type="reset">Back</button>
