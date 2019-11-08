@@ -85,7 +85,39 @@ class PbiView(TemplateView):
 		ctx['remainSS'] = q['remainSS']
 		ctx['totalSS'] = q['totalSS']
 		return ctx
+class PbiView(TemplateView):
+	template_name = 'pbi_list.html'
 
+	def get_context_data(self, **kwargs):
+		ctx = super(PbiView, self).get_context_data(**kwargs)
+		ctx['header'] = ['Order', 'Feature Name', 'Description', 'Sprint', 'Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
+		ctx['rows'] = Item.objects.all().order_by('order', '-last_modified')
+
+		x = 1
+		for i in ctx['rows']:
+			if (i.order != x):
+				i.order = x
+				i.save()
+			#i.last_sorted = timezone.now()
+			x+=1
+
+		cumulative = 0
+		for i in ctx['rows']:
+			i.cumulative_story_point = 0
+
+		for i in ctx['rows']:
+			cumulative = cumulative + i.estimate_of_story_point
+			i.cumulative_story_point = cumulative
+
+		q = Item.objects.aggregate(itemCount=Count('order'),
+			remainSS=Sum('remaining_sprint_size'),
+			totalSS=Sum('estimate_of_story_point'),
+		)
+
+		ctx['itemCount'] = q['itemCount']
+		ctx['remainSS'] = q['remainSS']
+		ctx['totalSS'] = q['totalSS']
+		return ctx
 class PbiCurrentView(TemplateView):
 	template_name = 'pbi_currentList.html'
 	
@@ -112,6 +144,7 @@ class PbiCurrentView(TemplateView):
 		ctx['totalSS'] = q['totalSS']
 		return ctx
 
+#-------------------------person----------------------------------------------------
 class PersomHomepage(TemplateView):
 	template_name = 'PersonHomePage.html'
 
@@ -120,7 +153,7 @@ class PersomHomepage(TemplateView):
 		context = super().get_context_data(**kwargs)
 		context['person']=Person.objects.get(pk = person)
 		return context
-
+#--------------------------project------------------------------------------------------
 class ProjectList(TemplateView):
 	template_name="ProjectList.html"
 	model = Project
@@ -130,7 +163,52 @@ class ProjectList(TemplateView):
 		ctx['header'] = ['Project Name', 'Description', 'Action']
 		ctx['rows'] = Project.objects.all()
 		return ctx
-		
+
+class ProjectView(TemplateView):
+	template_name = 'project_view.html'
+	def get_context_data(self, **kwargs):
+		project = self.kwargs['project']
+		context = super().get_context_data(**kwargs)
+		context['project'] = Project.objects.get(pk=project)
+		context['developer_list'] = Developer.objects.filter(project__pk = project)
+		context['sprint_list'] = Sprint.objects.filter(project__pk = project)
+		return context
+
+class PbiProjectView(TemplateView):
+	template_name = 'product_backlog.html'
+	def get_context_data(self, **kwargs):
+		project = self.kwargs['project']
+		ctx = super().get_context_data(**kwargs)
+		ctx = super(PbiProjectView, self).get_context_data(**kwargs)
+		ctx['header'] = ['Order', 'Feature Name', 'Description', 'Sprint', 'Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
+		ctx['rows'] = Item.objects.filter(project__pk = project).order_by('order', '-last_modified')
+		ctx['row1']=ctx['rows'][0]
+		x = 1
+		for i in ctx['rows']:
+			if (i.order != x):
+				i.order = x
+				i.save()
+			#i.last_sorted = timezone.now()
+			x+=1
+
+		cumulative = 0
+		for i in ctx['rows']:
+			i.cumulative_story_point = 0
+
+		for i in ctx['rows']:
+			cumulative = cumulative + i.estimate_of_story_point
+			i.cumulative_story_point = cumulative
+
+		q = Item.objects.aggregate(itemCount=Count('order'),
+			remainSS=Sum('remaining_sprint_size'),
+			totalSS=Sum('estimate_of_story_point'),
+		)
+
+		ctx['itemCount'] = q['itemCount']
+		ctx['remainSS'] = q['remainSS']
+		ctx['totalSS'] = q['totalSS']
+		return ctx
+
 #-------------------sprintbacklog---------------------------------
 class viewSprintBacklog(TemplateView):
 	template_name = "sprint_backlog.html"
@@ -159,7 +237,8 @@ class viewSprintBacklog(TemplateView):
 		context['total'] = done + nys + ip
 		
 		return context
-		
+
+
 class TaskCreateView(CreateView):
 	model = Task
 	fields = '__all__'
@@ -193,3 +272,13 @@ class TaskView(TemplateView):
 		context = super().get_context_data(**kwargs)
 		context['task'] = Task.objects.get(pk=task)
 		return context
+
+class TaskUpdateView(UpdateView):
+		model = Task
+		fields = ['name','hour','description','status']
+		template_name = 'task_create.html'
+		pk_taskUpdate_kwargs = 'taskUpdate_pk'
+		def get_object(self,queryset=None):
+			snum = int(self.kwargs.get(self.pk_taskUpdate_kwargs,None))
+			obj = get_object_or_404(Task, pk=snum)
+			return obj

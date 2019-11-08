@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<br>
+    <br><b>project name:</b> {{project.name}}</br>
+    <br><button onclick="window.location.href = 'http://localhost:8000/pbi/viewCurrentPBI/';" value="ProductBacklog">ProductBacklog</button></br>
+    {% for sprint in sprint_list %}
+        <br>Sprint {{sprint.number}}
+        <b>  Status:</b>   {{sprint.status}}
+        <b>  Create Time:</b>   {{sprint.create_at}}</br>
+        <br><button onclick="window.location.href = 'http://localhost:8000/pbi/viewSprintBacklog/{{sprint.pk}}';"
+                    value="SprintBacklog">SprintBacklog</button></br>
+        {% empty %}
+        <br>No sprint yet.</br>
+    {% endfor %}
+    <br><b>Proson invlove:</b></br>
+    <br><b>Developer</b></br>
+    {% for developer in developer_list %}
+    <br>{{developer.name}}</br>
+        {% empty %}
+            <br>No developer yet.</br>
+		{% endfor %}
+    <br><b>Prodect Owner</b></br>
+    {% for productowner in productowner_list %}
+    <br>{{productowner.name}}</br>
+        {% empty %}
+            <br>No Product Owner yet.</br>
+		{% endfor %}
+</body>
+</html>

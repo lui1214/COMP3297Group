@@ -28,10 +28,16 @@ urlpatterns = [
 	path('PersonHomePage/<int:person>/',
 		views.PersomHomepage.as_view(),
 		name='PersonHomepage'),
+	#-----------project--------------------------------------------------#
 	path('ProjectList/',
 		views.ProjectList.as_view(),
 		name='ProjectList'),
-
+	path('viewProject/<int:project>',
+		 views.ProjectView.as_view(),
+		 name='ProjectView'),
+	path('viewProductbacklog/<int:project>',
+		 views.PbiProjectView.as_view(),
+		 name='viweProductbacklog'),
 	#-------sprintbacklog--------------------------------------------------------#
 	path('viewSprintBacklog/<int:sprint>/',
 		views.viewSprintBacklog.as_view(),
@@ -45,4 +51,7 @@ urlpatterns = [
 	path('deleteTask/<int:taskDelete_pk>/',
 		views.TaskDeleteView.as_view(),
 		name='deleteTask'),
+	path('updateTask/<int:taskUpdate_pk>/',
+		views.TaskUpdateView.as_view(),
+		name='updateTask'),
 ]
