@@ -130,7 +130,17 @@ class ProjectList(TemplateView):
 		ctx['header'] = ['Project Name', 'Description', 'Action']
 		ctx['rows'] = Project.objects.all()
 		return ctx
-		
+
+class ProjectView(TemplateView):
+	template_name = 'project_view.html'
+	def get_context_data(self, **kwargs):
+		project = self.kwargs['project']
+		context = super().get_context_data(**kwargs)
+		context['project'] = Project.objects.get(pk=project)
+		context['developer_list'] = Developer.objects.filter(project__pk = project)
+		context['sprint_list'] = Sprint.objects.filter(project__pk = project)
+		return context
+
 #-------------------sprintbacklog---------------------------------
 class viewSprintBacklog(TemplateView):
 	template_name = "sprint_backlog.html"
