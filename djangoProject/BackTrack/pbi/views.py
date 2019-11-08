@@ -140,6 +140,24 @@ class viewSprintBacklog(TemplateView):
 		context['pbi_list'] = Item.objects.filter(sprint__pk = sprint)
 		context['task_list']= Task.objects.filter(sprint__pk = sprint)
 		context['sprint'] = Sprint.objects.get(pk = sprint)
+		
+		nys = 0
+		ip = 0
+		done = 0
+		for i in context['task_list']:
+			if i.status=="Completed":
+				done = done + i.hour
+			elif i.status=="In Progress":
+				ip = ip + i.hour
+			else:
+				nys = nys + i.hour
+				
+		context['nys'] = nys
+		context['ip'] = ip
+		context['done'] = done
+		context['remain'] = nys + ip
+		context['total'] = done + nys + ip
+		
 		return context
 		
 class TaskCreateView(CreateView):

@@ -24,54 +24,67 @@
 	{% endfor %}
 	-->
 	
-	{% for item in pbi_list %}
+	
 	<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
     <thead>
         <tr>
             <th>Feature</th>
 			<th>Not Yet Started</th>
 			<th>In Progress</th>
-			<th>Done</th>
-			<th>Total Burndown Hours</th>
+			<th>Completed</th>
 			<th>Total Remaining Hours</th>
+			<th>Total Burndown Hours</th>
 			<th>Total Effort Hours</th>
 			<th>Action</th>
         </tr>
     </thead>
     <tbody>
-	
-		{% for task in task_list %}
-			 <div class="if/else">
-			{% if task.item == item %}
+	{% for item in pbi_list %}
             <tr>
-				{% if forloop.first %}
-					<td rowspan="{{ task_list|length }}" align="center" valign="center">{{ task.item }}</td>
-				{% endif %}
+				<td align="center" valign="center">{{ item.name }}</td>
+				
 				<td align="center" valign="center">
-					{% if task.status == "Not yet started" %}
-						<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}</p>
+				{% for task in task_list %}
+					{% if task.item == item %}
+						{% if task.status == "Not yet started" %}
+							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}<br>{{ task.hour }} hours</p>
+						{% endif %}
 					{% endif %}
+				{% endfor %}
 				</td>
 				<td align="center" valign="center">
-					{% if task.status == "In Progress" %}
-						<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}</p>
+				{% for task in task_list %}
+					{% if task.item == item %}
+						{% if task.status == "In Progress" %}
+							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}<br>{{ task.hour }} hours</p>
+						{% endif %}
 					{% endif %}
+				{% endfor %}
 				</td>
 				<td align="center" valign="center">
-					{% if task.status == "Completed" %}
-						<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}</p>
+				{% for task in task_list %}
+					{% if task.item == item %}
+						{% if task.status == "Completed" %}
+							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">
+								{{ task.name }} <br>
+								{{ task.hour }} hours <br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/editTask/{{ task.pk }}';">Edit</button>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+							</p>
+						{% endif %}
 					{% endif %}
+				{% endfor %}
 				</td>
-				<td align="center" valign="center">{{ task.hour }}</td>
-				<td align="center" valign="center">{{ task.hour }}</td>
-				<td align="center" valign="center">{{ task.hour }}</td>
+				<td align="center" valign="center"></td>
+				<td align="center" valign="center"></td>
+				<td align="center" valign="center"></td>
 				<td align="center" valign="center">
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/editTask/{{ task.pk }}';">Edit</button>
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
 				</td>
             </tr>
-			{% endif %}
 			{% empty %}
 			<tr>
 				<td align="center" valign="center">*empty*</td>
@@ -84,14 +97,21 @@
 				<td align="center" valign="center">*nothing to be done*</td>
             </tr>
 			
-        {% endfor %}
-		
+	{% endfor %}
+	<tr>
+		<td align="center" valign="center">Total</td>
+		<td align="center" valign="center">{{ nys }}</td>
+		<td align="center" valign="center">{{ ip }}</td>
+		<td align="center" valign="center">{{ done }}</td>
+		<td align="center" valign="center">{{ remain }}</td>
+		<td align="center" valign="center">{{ done }}</td>
+		<td align="center" valign="center">{{ total }}</td>
+		<td align="center" valign="center"></td>
+	</tr>
     </tbody>
 	</table>
-	{% empty %}
-			<p>No item yet.</p>
-	{% endfor %}
-	<button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{ item.pk }}';">Add task</button>
+	
+	
 	
 </body>
 </html>
