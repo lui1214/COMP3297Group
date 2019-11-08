@@ -222,6 +222,8 @@ class viewSprintBacklog(TemplateView):
 		nys = 0
 		ip = 0
 		done = 0
+		total = []
+		
 		for i in context['task_list']:
 			if i.status=="Completed":
 				done = done + i.hour
@@ -229,13 +231,30 @@ class viewSprintBacklog(TemplateView):
 				ip = ip + i.hour
 			else:
 				nys = nys + i.hour
+		for i in context['pbi_list']:
+			for j in context['task_list']:
+				if j.item.name == i.name:
+					k = next((p for p in total if p["name"] == j.item.name), False)
+					if k == False:
+						if j.status == "Completed":
+							nameDict = { "name" : j.item.name, "remain" : 0, "burn" : j.hour, "totalDone": j.hour}
+							total.append(nameDict)
+						else:
+							nameDict = { "name" : j.item.name, "remain" : j.hour, "burn" : 0, "totalDone": j.hour}
+							total.append(nameDict)
+					else:
+						if j.status == "Completed":
+							k["burn"] = k["burn"] + j.hour
+						else:
+							k["remain"] = k["remain"] + j.hour
+						k["totalDone"] = k["totalDone"] +j.hour
 				
 		context['nys'] = nys
 		context['ip'] = ip
 		context['done'] = done
 		context['remain'] = nys + ip
-		context['total'] = done + nys + ip
-		
+		context['tot'] = done + nys + ip
+		context['total'] = total
 		return context
 
 
@@ -243,6 +262,9 @@ class TaskCreateView(CreateView):
 	model = Task
 	fields = '__all__'
 	template_name = 'task_create.html'
+	
+	def get_success_url(self):
+		return reverse_lazy('sprintbacklog', kwargs={'sprint': self.object.sprint_id})
 
 """	def get_context_data(self, **kwargs):
 		item = self.kwargs['item']
@@ -278,6 +300,10 @@ class TaskUpdateView(UpdateView):
 		fields = ['name','hour','description','status']
 		template_name = 'task_create.html'
 		pk_taskUpdate_kwargs = 'taskUpdate_pk'
+		
+		def get_success_url(self):
+			return reverse_lazy('sprintbacklog', kwargs={'sprint': self.object.sprint_id})
+		
 		def get_object(self,queryset=None):
 			snum = int(self.kwargs.get(self.pk_taskUpdate_kwargs,None))
 			obj = get_object_or_404(Task, pk=snum)

@@ -47,7 +47,13 @@
 				{% for task in task_list %}
 					{% if task.item == item %}
 						{% if task.status == "Not yet started" %}
-							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}<br>{{ task.hour }} hours</p>
+							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">
+								{{ task.name }} <br>
+								{{ task.hour }} hours <br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+							</p>
 						{% endif %}
 					{% endif %}
 				{% endfor %}
@@ -56,7 +62,13 @@
 				{% for task in task_list %}
 					{% if task.item == item %}
 						{% if task.status == "In Progress" %}
-							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">{{ task.name }}<br>{{ task.hour }} hours</p>
+							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">
+								{{ task.name }} <br>
+								{{ task.hour }} hours <br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+							</p>
 						{% endif %}
 					{% endif %}
 				{% endfor %}
@@ -69,20 +81,36 @@
 								{{ task.name }} <br>
 								{{ task.hour }} hours <br>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
-								<button onclick="window.location.href = 'http://localhost:8000/pbi/editTask/{{ task.pk }}';">Edit</button>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
 							</p>
 						{% endif %}
 					{% endif %}
 				{% endfor %}
 				</td>
-				<td align="center" valign="center"></td>
-				<td align="center" valign="center"></td>
-				<td align="center" valign="center"></td>
 				<td align="center" valign="center">
-					<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
-					<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
-					<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+				{% for i in total %}
+					{% if i.name == item.name %}
+						{{ i.remain }}
+					{% endif %}
+				{% endfor %}
+				</td>
+				<td align="center" valign="center">
+				{% for i in total %}
+					{% if i.name == item.name %}
+						{{ i.burn }}
+					{% endif %}
+				{% endfor %}
+				</td>
+				<td align="center" valign="center">
+				{% for i in total %}
+					{% if i.name == item.name %}
+						{{ i.totalDone }}
+					{% endif %}
+				{% endfor %}
+				</td>
+				<td align="center" valign="center">
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{ item.pk }}';">Add task</button>
 				</td>
             </tr>
 			{% empty %}
@@ -105,7 +133,7 @@
 		<td align="center" valign="center">{{ done }}</td>
 		<td align="center" valign="center">{{ remain }}</td>
 		<td align="center" valign="center">{{ done }}</td>
-		<td align="center" valign="center">{{ total }}</td>
+		<td align="center" valign="center">{{ tot }}</td>
 		<td align="center" valign="center"></td>
 	</tr>
     </tbody>
