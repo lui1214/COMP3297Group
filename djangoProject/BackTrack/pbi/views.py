@@ -215,7 +215,12 @@ class PbiProjectView(TemplateView):
 		ctx['remainSS'] = q['remainSS']
 		ctx['totalSS'] = q['totalSS']
 		return ctx
-
+class SprintCreateView(CreateView):
+	model = Sprint
+	fields = '__all__'
+	template_name = 'sprint_create.html'
+	def get_success_url(self):
+		return reverse_lazy('ProjectView', kwargs={'project': self.object.project_id})
 #-------------------sprintbacklog---------------------------------
 class viewSprintBacklog(TemplateView):
 	template_name = "sprint_backlog.html"

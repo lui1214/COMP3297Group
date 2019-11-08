@@ -19,6 +19,8 @@
         {% empty %}
         <br>No sprint yet.</br>
     {% endfor %}
+     <br><button onclick="window.location.href = 'http://localhost:8000/pbi/createSprint/{{project.pk}}';"
+                    value="createSprint">createSprint</button></br>
     <br><b>Proson invlove:</b></br>
     <br><b>Developer</b></br>
     {% for developer in developer_list %}
