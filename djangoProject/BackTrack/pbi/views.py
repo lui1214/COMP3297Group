@@ -175,3 +175,13 @@ class TaskView(TemplateView):
 		context = super().get_context_data(**kwargs)
 		context['task'] = Task.objects.get(pk=task)
 		return context
+
+class TaskUpdateView(UpdateView):
+		model = Task
+		fields = ['name','hour','description','status']
+		template_name = 'task_create.html'
+		pk_taskUpdate_kwargs = 'taskUpdate_pk'
+		def get_object(self,queryset=None):
+			snum = int(self.kwargs.get(self.pk_taskUpdate_kwargs,None))
+			obj = get_object_or_404(Task, pk=snum)
+			return obj
