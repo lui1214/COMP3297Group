@@ -63,6 +63,8 @@ class Item(models.Model):
 
 class Person(models.Model):
 	name = models.CharField(max_length=20)
+	email = models.EmailField(unique=True, default='')
+	password = models.CharField(max_length=50, default='')
 	def __str__(self):
 		return self.name
 		

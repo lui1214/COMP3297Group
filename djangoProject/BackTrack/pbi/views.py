@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, UpdateView, CreateView, DeleteView,ListView
-from .models import Item,Person,Project,Task,Developer,ScrumMaster,ProductOwner,Sprint
+from .models import *
 from .forms import ItemForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
