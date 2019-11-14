@@ -62,6 +62,7 @@ class PbiDetailView(TemplateView):
 def PbiAddToSprintView(request, pbi_pk):
 	obj = get_object_or_404(Item, pk=pbi_pk)
 	obj.added = True
+	obj.status = 'In Progress'
 	obj.save()
 	
 	return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.project.id)
@@ -69,6 +70,7 @@ def PbiAddToSprintView(request, pbi_pk):
 def PbiRemoveFromSprintView(request, pbi_pk):
 	obj = get_object_or_404(Item, pk=pbi_pk)
 	obj.added = False
+	obj.status = 'Not yet started'
 	obj.save()
 	
 	return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.project.id)
@@ -276,7 +278,7 @@ class viewSprintBacklog(TemplateView):
 								k["burn"] = k["burn"] + j.hour
 							else:
 								k["remain"] = k["remain"] + j.hour
-							k["totalDone"] = k["totalDone"] +j.hour
+							k["totalDone"] = k["totalDone"] + j.hour
 				
 		context['nys'] = nys
 		context['ip'] = ip
