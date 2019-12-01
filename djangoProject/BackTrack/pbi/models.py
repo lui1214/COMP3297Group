@@ -15,6 +15,8 @@ class Project(models.Model):
 	name = models.CharField(max_length=200)
 	description = models.CharField(default='emptyproject', max_length=200)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
+	last_sprint = models.IntegerField()
+	
 	def __str__(self):
 		return self.name
 
@@ -30,7 +32,7 @@ class Sprint(models.Model):
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	end_at = models.DateTimeField(blank=True, null=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
-	
+    
 	#def __str__(self):
 	#	return self.number
 	

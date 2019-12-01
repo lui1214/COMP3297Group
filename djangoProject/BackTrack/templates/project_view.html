@@ -6,8 +6,7 @@
 </head>
 <p>
     <p align="center"><b>Project name: </b> {{project.name}} </p>
-    <p align="center"><b>Descriptions: </b> {{project.description}} </p>
-    
+    <p align="center"><b>Description: </b> {{project.description}} </p>
     <!--
 	{% for sprint in sprint_list %}
         <p>Sprint {{sprint.number}}
@@ -39,6 +38,10 @@
 					<td align="center" valign="center">{{sprint.end_at}}</td>
 					<td align="center" valign="center">
 						<button onclick="window.location.href = 'http://localhost:8000/pbi/viewSprintBacklog/{{sprint.pk}}';" value="SprintBacklog">View Sprint Backlog</button>
+						<br>
+						<button onclick="window.location.href = 'http://localhost:8000/pbi/updateSprint/{{sprint.pk}}';" value="SprintBacklog">Edit Sprint</button>
+						<br>
+						<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteSprint/{{sprint.pk}}';" value="SprintBacklog">Delete Sprint</button>
 					</td>
 				</tr>
 			{% endfor %}

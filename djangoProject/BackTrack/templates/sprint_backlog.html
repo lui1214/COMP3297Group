@@ -36,6 +36,10 @@
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+								<br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToInProgress/{{ task.pk }}';">Mark as in progress</button>
+								<br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToCompleted/{{ task.pk }}';">Mark as completed</button>
 							</p>
 						{% endif %}
 					{% endif %}
@@ -51,6 +55,10 @@
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+								<br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToNotYetStarted/{{ task.pk }}';">Mark as not yet started</button>
+								<br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToCompleted/{{ task.pk }}';">Mark as completed</button>
 							</p>
 						{% endif %}
 					{% endif %}
@@ -66,6 +74,10 @@
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+								<br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToNotYetStarted/{{ task.pk }}';">Mark as not yet started</button>
+								<br>
+								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToInProgress/{{ task.pk }}';">Mark as in progress</button>
 							</p>
 						{% endif %}
 					{% endif %}
@@ -125,6 +137,12 @@
 	
 	<p align="center"><b>Maximum effort hour: </b>{{sprint.capacity}}</p>
 	<p align="center">
+		{% if megaDone == 1 and sprint.status == "Completed" %}
+			<button onclick="window.location.href = 'http://localhost:8000/pbi/SprintToInProgress/{{ sprint.pk }}';">Change Status to In Progress</button>
+		{% endif %}
+		{% if megaDone == 1 and sprint.status == "In Progress" %}
+			<button onclick="window.location.href = 'http://localhost:8000/pbi/SprintToCompleted/{{ sprint.pk }}';">Change Status to Completed</button>
+		{% endif %}
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ sprint.project.pk }}';">View Product Backlog</button>
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ sprint.project.pk }}';">Back</button>
 	</p>

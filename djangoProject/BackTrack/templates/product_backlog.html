@@ -26,10 +26,12 @@
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ r.pk }}';">Edit</button>
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ r.pk }}';">Delete</button>
 				{% endif %}
-				{% if r.added == False %}
-					<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiAddToSprintView/{{ r.pk }}';">Add to Sprint Backlog</button>
-				{% else %}
-					<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiRemoveFromSprintView/{{ r.pk }}';">Remove From Sprint Backlog</button>
+				{% if r.status != "completed" %}
+					{% if r.added == False %}
+						<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiAddToSprintView/{{ r.pk }}';">Add to Sprint Backlog</button>
+					{% else %}
+						<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiRemoveFromSprintView/{{ r.pk }}';">Remove From Sprint Backlog</button>
+					{% endif %}
 				{% endif %}
 				</td>
             </tr>
