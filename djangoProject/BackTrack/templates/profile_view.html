@@ -12,6 +12,10 @@
             (completed)
         {% endif %}
         <p><b>Role: </b>{{ person.role }}</p>
+        {% if person.role == "Product Owner" %}
+            <p><b>Key for Developer: </b>{{ project.Dhash }}</p>
+            <p><b>Key for Scrum Master: </b>{{ project.SMhash }}</p>
+        {% endif %}
     {% endif %}
 </p>
 

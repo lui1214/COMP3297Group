@@ -12,13 +12,10 @@ import os
 import time
 
 def _hash():
-    hash = hashlib.sha1()
-    hash.update(str(time.time()).encode('utf-8'))
-    hash.update(uuid.uuid1().hex.encode('utf-8'))
-    return hash.hexdigest()
-
-
-# Create your models here.
+	hash = hashlib.sha1()
+	hash.update(str(time.time()).encode('utf-8'))
+	hash.update(uuid.uuid1().hex.encode('utf-8'))
+	return hash.hexdigest()
 
 class Project(models.Model):
 	STAT = (
