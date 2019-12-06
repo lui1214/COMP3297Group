@@ -1,13 +1,14 @@
 from django.db import models
 from django.urls import reverse
-from datetime import datetime    
+from datetime import datetime	
 from django.utils import timezone
 from django.contrib.auth.models import User
-
+from django.conf import settings
 import datetime
 import pytz
 
 # Create your models here.
+
 class Project(models.Model):
 	STAT = (
 		('Completed', 'Completed'),
@@ -22,6 +23,19 @@ class Project(models.Model):
 	def __str__(self):
 		return self.name
 
+class Person(models.Model):
+	STAT = (
+		('Product Owner', 'Product Owner'),
+		('Scrum Master', 'Scrum Master'),
+		('Developer', 'Developer'),
+	)
+	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+	role = models.CharField(choices=STAT, max_length=200, blank=True, null=True)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+	
+	def __str__(self):
+		return self.user.username
+
 class Sprint(models.Model):
 	STAT = (
 		('Completed', 'Completed'),
@@ -34,7 +48,7 @@ class Sprint(models.Model):
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	end_at = models.DateTimeField(blank=True, null=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    
+	
 	#def __str__(self):
 	#	return self.number
 	
@@ -46,7 +60,7 @@ class Item(models.Model):
 		('Completed', 'Completed'),
 		('In Progress', 'In Progress'),
 		('Not yet started', 'Not yet started'),
-        ('Not finished', 'Not finished'),
+		('Not finished', 'Not finished'),
 	)
 	order = models.PositiveIntegerField()
 	name = models.CharField(max_length=200)
@@ -65,18 +79,6 @@ class Item(models.Model):
 		
 	def get_absolute_url(self):
 		return "/pbi/viewPBI/"
-
-class Person(models.Model):
-	STAT = (
-		('Product Owner', 'Product Owner'),
-		('Scrum Master', 'Scrum Master'),
-		('Developer', 'Developer'),
-	)
-	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
-	role = models.CharField(choices=STAT, max_length=200, blank=True, null=True)
-	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
-	def __str__(self):
-		return self.user.username
 
 class Task(models.Model):
 	STAT = (

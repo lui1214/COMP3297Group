@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Sum
 from datetime import datetime
 import datetime
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.forms import modelformset_factory
 from django.urls import reverse_lazy, reverse
@@ -25,9 +26,12 @@ def register(response):
     else:
         form = RegisterForm()
 
-    return render(response, "registration/register.html", {"form":form}) 
+    return render(response, "registration/register.html", {"form":form})
     
-class PbiUpdateView(UpdateView):
+class PbiUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Item
     fields = '__all__'
     template_name = 'pbi_new.html'
@@ -40,7 +44,10 @@ class PbiUpdateView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
         
-class PbiUpdateSprintView(UpdateView):
+class PbiUpdateSprintView(LoginRequiredMixin, UpdateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Item
     fields = ['sprint']
     template_name = 'pbi_new.html'
@@ -53,7 +60,10 @@ class PbiUpdateSprintView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
 
-class PbiDeleteView(DeleteView):
+class PbiDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Item
     template_name = 'pbi_delete.html'
     pk_pbiDelete_kwargs = 'pbiDelete_pk'
@@ -65,7 +75,10 @@ class PbiDeleteView(DeleteView):
     def get_success_url(self):
         return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
 
-class PbiCreateView(CreateView):
+class PbiCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Item
     fields = '__all__'
     #fields = ['order']
@@ -74,7 +87,10 @@ class PbiCreateView(CreateView):
     def get_success_url(self):
         return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
     
-class PbiDetailView(TemplateView):
+class PbiDetailView(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name = 'pbi_detail.html'
     
     def get_context_data(self, **kwargs):
@@ -85,7 +101,10 @@ class PbiDetailView(TemplateView):
         return context
         
         
-def PbiAddToSprintView(request, pbi_pk):
+def PbiAddToSprintView(LoginRequiredMixin, request, pbi_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Item, pk=pbi_pk)
     obj.added = True
     obj.status = 'In Progress'
@@ -97,7 +116,10 @@ def PbiAddToSprintView(request, pbi_pk):
     
     return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.project.id)
     
-def PbiRemoveFromSprintView(request, pbi_pk):
+def PbiRemoveFromSprintView(LoginRequiredMixin, request, pbi_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Item, pk=pbi_pk)
     obj.added = False
     obj.status = 'Not yet started'
@@ -167,7 +189,10 @@ class PbiCurrentView(TemplateView):
         return ctx
 """
 #-------------------------person----------------------------------------------------
-class PersomHomepage(TemplateView):
+class PersomHomepage(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name = 'PersonHomePage.html'
 
     def get_context_data(self, **kwargs):
@@ -176,14 +201,20 @@ class PersomHomepage(TemplateView):
         context['person']=Person.objects.get(pk = person)
         return context
 #--------------------------project------------------------------------------------------
-def ProjectToInProgressView(request, project_pk):
+def ProjectToInProgressView(LoginRequiredMixin, request, project_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Project, pk=project_pk)
     obj.status = 'In Progress'
     obj.save()
     
     return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.id)
 
-def ProjectToCompletedView(request, project_pk):
+def ProjectToCompletedView(LoginRequiredMixin, request, project_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+    
     obj = get_object_or_404(Project, pk=project_pk)
     obj.status = 'Completed'
     obj.save()
@@ -203,7 +234,10 @@ class ProjectList(LoginRequiredMixin, TemplateView):
         ctx['rows'] = Project.objects.all()
         return ctx
 
-class ProjectView(TemplateView):
+class ProjectView(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name = 'project_view.html'
     def get_context_data(self, **kwargs):
         project = self.kwargs['project']
@@ -215,7 +249,10 @@ class ProjectView(TemplateView):
         context['sprint_list'] = Sprint.objects.filter(project__pk = project)
         return context
 
-class PbiProjectView(TemplateView):
+class PbiProjectView(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name = 'product_backlog.html'
     def get_context_data(self, **kwargs):
         project = self.kwargs['project']
@@ -260,7 +297,10 @@ class PbiProjectView(TemplateView):
         ctx['totalSS'] = q['totalSS']
         return ctx
         
-class PbiProjectCurrentView(TemplateView):
+class PbiProjectCurrentView(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name = 'product_backlog_current.html'
     def get_context_data(self, **kwargs):
         project = self.kwargs['project']
@@ -298,14 +338,20 @@ class PbiProjectCurrentView(TemplateView):
         ctx['totalSS'] = q['totalSS']
         return ctx
         
-class SprintCreateView(CreateView):
+class SprintCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Sprint
     fields = '__all__'
     template_name = 'sprint_create.html'
     def get_success_url(self):
         return reverse_lazy('ProjectView', kwargs={'project': self.object.project_id})
         
-class SprintDeleteView(DeleteView):
+class SprintDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Sprint
     template_name = 'sprint_delete.html'
     pk_sprintDelete_kwargs = 'sprintDelete_pk'
@@ -318,22 +364,28 @@ class SprintDeleteView(DeleteView):
         obj = get_object_or_404(Sprint, pk=snum)
         return obj
         
-class SprintUpdateView(UpdateView):
-        model = Sprint
-        fields = '__all__'
-        template_name = 'sprint_create.html'
-        pk_sprintUpdate_kwargs = 'sprintUpdate_pk'
+class SprintUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
+    model = Sprint
+    fields = '__all__'
+    template_name = 'sprint_create.html'
+    pk_sprintUpdate_kwargs = 'sprintUpdate_pk'
         
-        def get_success_url(self):
-            return reverse_lazy('ProjectView', kwargs={'project': self.object.project_id})
+    def get_success_url(self):
+        return reverse_lazy('ProjectView', kwargs={'project': self.object.project_id})
         
-        def get_object(self,queryset=None):
-            snum = int(self.kwargs.get(self.pk_sprintUpdate_kwargs,None))
-            obj = get_object_or_404(Sprint, pk=snum)
-            return obj
+    def get_object(self,queryset=None):
+        snum = int(self.kwargs.get(self.pk_sprintUpdate_kwargs,None))
+        obj = get_object_or_404(Sprint, pk=snum)
+        return obj
         
 #-------------------sprintbacklog---------------------------------
-class viewSprintBacklog(TemplateView):
+class viewSprintBacklog(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name = "sprint_backlog.html"
     def get_context_data(self, **kwargs):
         sprint = self.kwargs['sprint']
@@ -446,7 +498,10 @@ class viewSprintBacklog(TemplateView):
         context['total'] = total
         return context
         
-def SprintToInProgressView(request, sprint_pk):
+def SprintToInProgressView(LoginRequiredMixin, request, sprint_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Sprint, pk=sprint_pk)
     obj.status = 'In Progress'
     
@@ -457,7 +512,10 @@ def SprintToInProgressView(request, sprint_pk):
     
     return HttpResponseRedirect('/pbi/viewSprintBacklog/%i/' % obj.id)
 
-def SprintToCompletedView(request, sprint_pk):
+def SprintToCompletedView(LoginRequiredMixin, request, sprint_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Sprint, pk=sprint_pk)
     obj.status = 'Completed'
     obj.end_at = timezone.now()
@@ -482,7 +540,10 @@ def SprintToCompletedView(request, sprint_pk):
     
     return HttpResponseRedirect('/pbi/viewSprintBacklog/%i/' % obj.id)
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin, CreateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Task
     fields = '__all__'
     template_name = 'task_create.html'
@@ -497,7 +558,10 @@ class TaskCreateView(CreateView):
         return context
 """
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     model = Task
     template_name = 'task_delete.html'
     pk_taskDelete_kwargs = 'taskDelete_pk'
@@ -510,7 +574,10 @@ class TaskDeleteView(DeleteView):
         obj = get_object_or_404(Task, pk=snum)
         return obj
             
-class TaskView(TemplateView):
+class TaskView(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name = 'task_view.html'
         
     def get_context_data(self, **kwargs):
@@ -519,21 +586,27 @@ class TaskView(TemplateView):
         context['task'] = Task.objects.get(pk=task)
         return context
 
-class TaskUpdateView(UpdateView):
-        model = Task
-        fields = ['name', 'description', 'hour', 'status', 'person']
-        template_name = 'task_create.html'
-        pk_taskUpdate_kwargs = 'taskUpdate_pk'
-        
-        def get_success_url(self):
-            return reverse_lazy('sprintbacklog', kwargs={'sprint': self.object.sprint_id})
-        
-        def get_object(self,queryset=None):
-            snum = int(self.kwargs.get(self.pk_taskUpdate_kwargs,None))
-            obj = get_object_or_404(Task, pk=snum)
-            return obj
+class TaskUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
 
-def TaskToNotYetStartedView(request, task_pk):
+    model = Task
+    fields = ['name', 'description', 'hour', 'status', 'person']
+    template_name = 'task_create.html'
+    pk_taskUpdate_kwargs = 'taskUpdate_pk'
+        
+    def get_success_url(self):
+        return reverse_lazy('sprintbacklog', kwargs={'sprint': self.object.sprint_id})
+        
+    def get_object(self,queryset=None):
+        snum = int(self.kwargs.get(self.pk_taskUpdate_kwargs,None))
+        obj = get_object_or_404(Task, pk=snum)
+        return obj
+
+def TaskToNotYetStartedView(LoginRequiredMixin, request, task_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Task, pk=task_pk)
     obj.status = 'Not yet started'
     k = obj.sprint
@@ -543,7 +616,10 @@ def TaskToNotYetStartedView(request, task_pk):
     
     return HttpResponseRedirect('/pbi/viewSprintBacklog/%i/' % obj.sprint.id)
 
-def TaskToInProgressView(request, task_pk):
+def TaskToInProgressView(LoginRequiredMixin, request, task_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Task, pk=task_pk)
     obj.status = 'In Progress'
     k = obj.sprint
@@ -553,7 +629,10 @@ def TaskToInProgressView(request, task_pk):
     
     return HttpResponseRedirect('/pbi/viewSprintBacklog/%i/' % obj.sprint.id)
 
-def TaskToCompletedView(request, task_pk):
+def TaskToCompletedView(LoginRequiredMixin, request, task_pk):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     obj = get_object_or_404(Task, pk=task_pk)
     obj.status = 'Completed'
     obj.save()

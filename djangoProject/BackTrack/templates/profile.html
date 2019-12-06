@@ -1,0 +1,6 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<p align="center">hi</p>
+<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{item.project.pk}}';" value="Back" type="reset">Back</button>
+{% endblock %}

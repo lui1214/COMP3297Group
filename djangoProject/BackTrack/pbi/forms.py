@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from pbi.models import Item
+from pbi.models import Item, Person
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User

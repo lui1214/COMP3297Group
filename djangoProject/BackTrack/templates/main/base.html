@@ -46,7 +46,8 @@
 	<div class="sidenav">
 		<a href="/pbi/">Home</a>
 		{% if user.is_authenticated == True %}
-			<p style="position: fixed; bottom: 0; width:100%; text-align: center"><button onclick="window.location.href = '/pbi/logout/';" value="logout" type="submit" class="btn btn-success">Log out</button></p>
+			<a href="/pbi/profile/">Profile</a>
+			<a href="/pbi/logout/">Log out</a>
 		{% endif %}
 	</div>
  
