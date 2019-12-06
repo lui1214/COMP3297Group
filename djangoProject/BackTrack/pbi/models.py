@@ -6,6 +6,17 @@ from django.contrib.auth.models import User
 from django.conf import settings
 import datetime
 import pytz
+import uuid
+import hashlib
+import os
+import time
+
+def _hash():
+    hash = hashlib.sha1()
+    hash.update(str(time.time()).encode('utf-8'))
+    hash.update(uuid.uuid1().hex.encode('utf-8'))
+    return hash.hexdigest()
+
 
 # Create your models here.
 
@@ -16,9 +27,11 @@ class Project(models.Model):
 		('Not yet started', 'Not yet started'),
 	)
 	name = models.CharField(max_length=200)
-	description = models.CharField(default='emptyproject', max_length=200)
+	description = models.CharField(max_length=200, blank=True, null=True)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
-	last_sprint = models.IntegerField()
+	last_sprint = models.IntegerField(default=1, editable=False)
+	Dhash = models.CharField(max_length=200, default=_hash, editable=False)
+	SMhash = models.CharField(max_length=200, default=_hash, editable=False)
 	
 	def __str__(self):
 		return self.name
@@ -42,12 +55,12 @@ class Sprint(models.Model):
 		('In Progress', 'In Progress'),
 		('Not yet started', 'Not yet started'),
 	)
-	number = models.IntegerField()
+	number = models.IntegerField(blank=True, null=True)
 	capacity = models.IntegerField(blank=True, null=True)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)
 	create_at = models.DateTimeField(blank=True, default=timezone.now, editable=False)
 	end_at = models.DateTimeField(blank=True, null=True)
-	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
 	
 	#def __str__(self):
 	#	return self.number

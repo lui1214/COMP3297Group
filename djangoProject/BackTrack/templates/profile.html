@@ -3,7 +3,6 @@
 {% block content %}
 {% if user.is_authenticated %}
     <p>Welcome, {{ user.get_username }}.</p>
-	<p>Welcome, {{ user.id }}.</p>
 {% endif %}
 
 <button onclick="window.history.back();" value="Back" type="reset">Back</button>

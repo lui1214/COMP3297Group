@@ -1,7 +1,7 @@
 {% extends "main/base.html" %}
 
 {% block content %}
-<h1 align="center">Showing all projects</h1>
+<h1 align="center">Showing project</h1>
 <table class="table" border="2" style="border:2px;" cellpadding="10" align="center">
     <thead>
         <tr>
@@ -11,24 +11,24 @@
         </tr>
     </thead>
     <tbody>
-        {% for r in rows %}
+        {% if r != NONE %}
             <tr>
 				<td align="center" valign="center">{{ r.name }}</td>
                 <td align="center" valign="center">{{ r.description }}</td>
 				<td align="center" valign="center">{{ r.status }}</td>
                 <td align="center" valign="center">
-					<p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ r.pk }}';" value="GoIntoProductBacklog">View Product Backlog</button></p>
+					<p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ r.pk }}';">View Product Backlog</button></p>
 					<p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ r.pk }}';">View Sprints</button></p>
 				</td>
             </tr>
-		{% empty %}
+		{% else %}
 			<tr>
 				<td align="center" valign="center">*empty*</td>
 				<td align="center" valign="center">*empty*</td>
 				<td align="center" valign="center">*empty*</td>
 				<td align="center" valign="center">*nothing to be done*</td>
             </tr>
-        {% endfor %}
+        {% endif %}
     </tbody>
 </table>
 {% endblock %}

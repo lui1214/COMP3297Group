@@ -1,0 +1,18 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+<p><b>Username: </b>{{ person.user.username }}</p>
+<p><b>Project handling: </b>
+    {% if project.name == NONE %}
+        Not handling any project currently
+        <p><button onclick="window.location.href = '/pbi/createProject/';">Create New Project</button></p>
+    {% else %}
+        {{ project.name }}
+        {% if project.status == "Completed" %}
+            (completed)
+        {% endif %}
+        <p><b>Role: </b>{{ person.role }}</p>
+    {% endif %}
+</p>
+
+{% endblock %}

@@ -29,8 +29,14 @@
 				{% if r.status == "Not yet started" %}
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ r.pk }}';">Edit</button>
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ r.pk }}';">Delete</button>
+                    {% if r.sprint.status == "Completed" and r.project.last_sprint > r.sprint.number %}
+                        <button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBIsprint/{{ r.pk }}';">Change To Latest Sprint</button>
+                    {% endif %}
 				{% endif %}
-				{% if r.status != "completed" %}
+				{% if r.status == "Not finished" and r.project.last_sprint > r.sprint.number %}
+					<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBIsprint/{{ r.pk }}';">Change To Latest Sprint</button>
+				{% endif %}
+				{% if r.status != "Completed" and r.sprint.status != "Completed" %}
 					{% if r.added == False %}
 						<br><button onclick="window.location.href = 'http://localhost:8000/pbi/PbiAddToSprintView/{{ r.pk }}';">Add to Sprint Backlog</button>
 					{% else %}
@@ -61,7 +67,7 @@
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/createPBI/';">Add new PBI</button>
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{row1.pk}}';">Switch to full view</button>
     <button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{row1.pk}}';">View Sprints</button>
-	{% if row1.project.status == "Completed" %}
+	{% if row1.status == "Completed" %}
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectToInProgress/{{row1.pk}}';">Save project as In Progress</button>
 	{% else %}
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectToCompleted/{{row1.pk}}';">Save Project as Completed</button>

@@ -46,26 +46,26 @@
 	</p>
     <p align="center"><b>Person invloved:</b>
 	<ol style="text-align:center;max-width:260px;margin:0 auto;">
-		<li><b>Developer:</b></li>
-		<ul>
-			{% for developer in developer_list %}
-				<li>{{developer.name}}</li>
-			{% empty %}
-				<li>*No developer yet*</li>
-			{% endfor %}
-		</ul>
 		<li><b>Product Owner:</b></li>
 		<ul>
-			{% for productowner in productowner_list %}
-				<li>{{productowner.name}}</li>
+            {% for productowner in productowner_list %}
+				<li>{{productowner.user.username}}</li>
 			{% empty %}
 				<li>*No Product Owner yet*</li>
+			{% endfor %}
+		</ul>
+		<li><b>Developer:</b></li>
+		<ul>
+            {% for developer in developer_list %}
+				<li>{{developer.user.username}}</li>
+			{% empty %}
+				<li>*No Developer yet*</li>
 			{% endfor %}
 		</ul>
 		<li><b>Scrum Massters:</b></li>
 		<ul>
 			{% for scrummaster in scrummaster %}
-				<li>{{scrummaster.name}}</li>
+				<li>{{scrummaster.user.username}}</li>
 			{% empty %}
 				<li>*No Scrum Master yet*</li>
 			{% endfor %}

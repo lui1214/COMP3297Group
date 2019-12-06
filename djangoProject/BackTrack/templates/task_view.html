@@ -7,7 +7,9 @@
 <p><b>Owner: </b>{{ task.person.name }}</p>
 <p><b>Status: </b>{{ task.status }}</p>
 <p><b>PBI: </b>{{ task.item }}</p>
-<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
-<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+{% if task.person != NONE %}
+    <button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
+    <button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+{% endif %}
 <button onclick="window.history.back();" value="Back" type="reset">Back</button>
 {% endblock %}

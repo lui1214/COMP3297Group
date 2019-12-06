@@ -36,13 +36,22 @@
 							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">
 								{{ task.name }} <br>
 								{{ task.hour }} hours <br>
+                                
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
-								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
-								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
-								<br>
-								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToInProgress/{{ task.pk }}';">Mark as in progress</button>
-								<br>
-								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToCompleted/{{ task.pk }}';">Mark as completed</button>
+								
+                                {% if task.person != NONE %}
+                                    {% if task.person.user.username == user.get_username %}
+                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
+                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+                                        <br>
+                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToInProgress/{{ task.pk }}';">Mark as in progress</button>
+                                        <br>
+                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToCompleted/{{ task.pk }}';">Mark as completed</button>
+                                    {% endif %}
+                                {% else %}
+                                    <br>
+                                    <button onclick="window.location.href = 'http://localhost:8000/pbi/TaskOwn/{{ task.pk }}';">Declare Ownership</button>
+                                {% endif %}
 							</p>
 						{% endif %}
 					{% endif %}
