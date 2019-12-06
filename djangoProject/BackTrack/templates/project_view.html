@@ -1,3 +1,6 @@
+{% extends "main/base.html" %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +10,7 @@
 <p>
     <p align="center"><b>Project name: </b> {{project.name}} </p>
     <p align="center"><b>Description: </b> {{project.description}} </p>
-	<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
+	<table class="table" border="2" style="border:2px;" cellpadding="10" align="center">
 		<thead>
 			<tr>
 				<th align="center" valign="center">Sprint</th>
@@ -42,7 +45,7 @@
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectList/';" value="Back">Back</button>
 	</p>
     <p align="center"><b>Person invloved:</b>
-	<ol style="text-align:center;max-width:210px;margin:0 auto;">
+	<ol style="text-align:center;max-width:260px;margin:0 auto;">
 		<li><b>Developer:</b></li>
 		<ul>
 			{% for developer in developer_list %}
@@ -71,3 +74,4 @@
 	</p>
 </body>
 </html>
+{% endblock %}

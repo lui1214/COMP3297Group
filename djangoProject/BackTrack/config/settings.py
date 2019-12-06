@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.9', 'localhost', ]
 # Application definition
 
 INSTALLED_APPS = [
+	'crispy_forms',
 	'pbi.apps.PbiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -120,4 +121,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
 CRISPY_TEMPLATE_PACK="bootstrap4"
+
+LOGIN_REDIRECT_URL = "/pbi/"
+LOGOUT_REDIRECT_URL = "/pbi/login/"

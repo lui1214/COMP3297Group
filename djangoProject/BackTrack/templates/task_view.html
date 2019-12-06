@@ -1,3 +1,6 @@
+{% extends "main/base.html" %}
+
+{% block content %}
 <p><b>Name: </b>{{ task.name }}</p>
 <p><b>Description: </b>{{ task.description }}</p>
 <p><b>Estimate hour: </b>{{ task.hour }}</p>
@@ -7,3 +10,4 @@
 <button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
 <button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
 <button onclick="window.location.href = 'http://localhost:8000/pbi/viewSprintBacklog/{{ task.sprint.id }}';" value="Back" type="reset">Back</button>
+{% endblock %}

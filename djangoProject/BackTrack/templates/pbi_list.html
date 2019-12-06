@@ -1,4 +1,7 @@
-<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
+{% extends "main/base.html" %}
+
+{% block content %}
+<table class="table" border="2" style="border:2px;" cellpadding="10" align="center">
     <thead>
         <tr>
             {% for k in header %}
@@ -60,3 +63,4 @@
 <p align="center">
 	Total Sprint Size: {{ totalSS }}
 </p>
+{% endblock %}

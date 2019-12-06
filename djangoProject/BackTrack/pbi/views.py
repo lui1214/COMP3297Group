@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView, UpdateView, CreateView, DeleteView,ListView
 from .models import *
-from .forms import ItemForm
+from .forms import ItemForm, RegisterForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Count, Sum
@@ -9,9 +9,23 @@ import datetime
 from django.utils import timezone
 from django.forms import modelformset_factory
 from django.urls import reverse_lazy, reverse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
 def index(request):
     return HttpResponseRedirect("/pbi/ProjectList/")
+    
+def register(response):
+    if response.method == "POST":
+        form = RegisterForm(response.POST)
+        if form.is_valid():
+            form.save()
+
+        return redirect("/pbi/login/")
+    else:
+        form = RegisterForm()
+
+    return render(response, "registration/register.html", {"form":form}) 
     
 class PbiUpdateView(UpdateView):
     model = Item
@@ -43,7 +57,6 @@ class PbiDeleteView(DeleteView):
     model = Item
     template_name = 'pbi_delete.html'
     pk_pbiDelete_kwargs = 'pbiDelete_pk'
-    success_url = '/pbi/viewPBI/'
     
     def get_object(self,queryset=None):
         snum = int(self.kwargs.get(self.pk_pbiDelete_kwargs,None))
@@ -177,7 +190,10 @@ def ProjectToCompletedView(request, project_pk):
     
     return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.id)
    
-class ProjectList(TemplateView):
+class ProjectList(LoginRequiredMixin, TemplateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
     template_name="ProjectList.html"
     model = Project
     
@@ -193,9 +209,9 @@ class ProjectView(TemplateView):
         project = self.kwargs['project']
         context = super().get_context_data(**kwargs)
         context['project'] = Project.objects.get(pk=project)
-        context['developer_list'] = Developer.objects.filter(project__pk = project)
-        context['productowner_list'] = ProductOwner.objects.filter(project__pk = project)
-        context['scrummaster_list'] = ScrumMaster.objects.filter(project__pk = project)
+        context['developer_list'] = Person.objects.filter(project__pk = project, role = 'Developer')
+        context['productowner_list'] = Person.objects.filter(project__pk = project, role = 'Product Owner')
+        context['scrummaster_list'] = Person.objects.filter(project__pk = project, role = 'Scrum Master')
         context['sprint_list'] = Sprint.objects.filter(project__pk = project)
         return context
 
