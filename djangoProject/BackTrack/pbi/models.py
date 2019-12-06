@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from datetime import datetime    
 from django.utils import timezone
+from django.contrib.auth.models import User
+
 import datetime
 import pytz
 
@@ -65,29 +67,16 @@ class Item(models.Model):
 		return "/pbi/viewPBI/"
 
 class Person(models.Model):
-	name = models.CharField(max_length=20)
-	email = models.EmailField(unique=True, default='')
-	password = models.CharField(max_length=50, default='')
-	def __str__(self):
-		return self.name
-		
-class ProductOwner(Person):
-	role = 'ProductOwner'
+	STAT = (
+		('Product Owner', 'Product Owner'),
+		('Scrum Master', 'Scrum Master'),
+		('Developer', 'Developer'),
+	)
+	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
+	role = models.CharField(choices=STAT, max_length=200, blank=True, null=True)
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
 	def __str__(self):
-		return self.role
-
-class ScrumMaster(Person):
-	role = 'ScrumMaster'
-	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
-	def __str__(self):
-		return self.role
-
-class Developer(Person):
-	role = 'Developer'
-	project = models.ForeignKey(Project, on_delete=models.SET_NULL, blank=True, null=True)
-	def __str__(self):
-		return self.role
+		return self.user.username
 
 class Task(models.Model):
 	STAT = (

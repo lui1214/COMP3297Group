@@ -433,7 +433,7 @@ class viewSprintBacklog(TemplateView):
 def SprintToInProgressView(request, sprint_pk):
     obj = get_object_or_404(Sprint, pk=sprint_pk)
     obj.status = 'In Progress'
-            
+    
     j = obj.project
     j.last_sprint = obj.number
     j.save()
