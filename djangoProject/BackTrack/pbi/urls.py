@@ -15,6 +15,9 @@ urlpatterns = [
 	path('updatePBI/<int:pbiUpdate_pk>/',
 		views.PbiUpdateView.as_view(),
 		name='updatePBI'),
+	path('updatePBIsprint/<int:pbiUpdate_pk>/',
+		views.PbiUpdateSprintView.as_view(),
+		name='updatePBIsprint'),
 	path('deletePBI/<int:pbiDelete_pk>/',
 		views.PbiDeleteView.as_view(),
 		name='deletePBI'),
@@ -43,6 +46,12 @@ urlpatterns = [
 	path('viewProject/<int:project>/',
 		views.ProjectView.as_view(),
 		name='ProjectView'),
+	path('ProjectToInProgress/<int:project_pk>/',
+		views.ProjectToInProgressView,
+		name='ProjectToInProgress'),
+    path('ProjectToCompleted/<int:project_pk>/',
+		views.ProjectToCompletedView,
+		name='ProjectToCompleted'),
     
 	#-------sprintbacklog--------------------------------------------------------#
 	path('viewSprintBacklog/<int:sprint>/',

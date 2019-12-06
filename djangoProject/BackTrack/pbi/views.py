@@ -25,6 +25,19 @@ class PbiUpdateView(UpdateView):
         return obj
     def get_success_url(self):
         return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
+        
+class PbiUpdateSprintView(UpdateView):
+    model = Item
+    fields = ['sprint']
+    template_name = 'pbi_new.html'
+    pk_pbiUpdate_kwargs = 'pbiUpdate_pk'
+    
+    def get_object(self,queryset=None):
+        snum = int(self.kwargs.get(self.pk_pbiUpdate_kwargs,None))
+        obj = get_object_or_404(Item, pk=snum)
+        return obj
+    def get_success_url(self):
+        return reverse_lazy('viewProductbacklog', kwargs={'project': self.object.project_id})
 
 class PbiDeleteView(DeleteView):
     model = Item
@@ -63,6 +76,10 @@ def PbiAddToSprintView(request, pbi_pk):
     obj = get_object_or_404(Item, pk=pbi_pk)
     obj.added = True
     obj.status = 'In Progress'
+    if obj.sprint.status != "Completed":
+        k = obj.sprint
+        k.status = "In Progress"
+        k.save()
     obj.save()
     
     return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.project.id)
@@ -146,13 +163,27 @@ class PersomHomepage(TemplateView):
         context['person']=Person.objects.get(pk = person)
         return context
 #--------------------------project------------------------------------------------------
+def ProjectToInProgressView(request, project_pk):
+    obj = get_object_or_404(Project, pk=project_pk)
+    obj.status = 'In Progress'
+    obj.save()
+    
+    return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.id)
+
+def ProjectToCompletedView(request, project_pk):
+    obj = get_object_or_404(Project, pk=project_pk)
+    obj.status = 'Completed'
+    obj.save()
+    
+    return HttpResponseRedirect('/pbi/viewProductbacklog/%i/' % obj.id)
+   
 class ProjectList(TemplateView):
     template_name="ProjectList.html"
     model = Project
     
     def get_context_data(self, **kwargs):
         ctx = super(ProjectList, self).get_context_data(**kwargs)
-        ctx['header'] = ['Project Name', 'Description', 'Action']
+        ctx['header'] = ['Project Name', 'Description', 'Status', 'Action']
         ctx['rows'] = Project.objects.all()
         return ctx
 
@@ -176,7 +207,7 @@ class PbiProjectView(TemplateView):
         ctx = super(PbiProjectView, self).get_context_data(**kwargs)
         ctx['header'] = ['Order', 'Feature Name', 'Description', 'Sprint', 'Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
         ctx['rows'] = Item.objects.filter(project__pk = project).order_by('order', '-last_modified')
-        ctx['row1']=ctx['rows'][0]
+        ctx['row1'] = Project.objects.get(pk=project)
         x = 1
         for i in ctx['rows']:
             if (i.order != x):
@@ -184,7 +215,17 @@ class PbiProjectView(TemplateView):
                 i.save()
             #i.last_sorted = timezone.now()
             x+=1
-
+        
+        for i in ctx['rows']:        
+            try:
+                find = Task.objects.filter(item = i)
+                for j in find:
+                    if j.sprint.status == "In Progress":
+                        j.sprint = i.sprint
+                        j.save()
+            except Task.DoesNotExist:
+                i = i
+        
         cumulative = 0
         for i in ctx['rows']:
             i.cumulative_story_point = 0
@@ -211,8 +252,18 @@ class PbiProjectCurrentView(TemplateView):
         ctx = super(PbiProjectCurrentView, self).get_context_data(**kwargs)
         ctx['header'] = ['Order', 'Feature Name', 'Description', 'Sprint', 'Remaining Sprint Size', 'Estimate of Story Point', 'Cumulative Story Point', 'Status', 'Last Modified', 'Created At', 'Action']
         ctx['rows'] = Item.objects.filter(project__pk = project).order_by('order', '-last_modified')
-        ctx['row1']=ctx['rows'][0]
+        ctx['row1'] = Project.objects.get(pk=project)
 
+        for i in ctx['rows']:        
+            try:
+                find = Task.objects.filter(item = i)
+                for j in find:
+                    if j.sprint.status == "In Progress":
+                        j.sprint = i.sprint
+                        j.save()
+            except Task.DoesNotExist:
+                i = i
+                
         cumulative = 0
         for i in ctx['rows']:
             i.cumulative_story_point = 0
@@ -311,6 +362,9 @@ class viewSprintBacklog(TemplateView):
                                 k["allDone"] = 0
                             k["CNC"] = k["CNC"] + 1
                             k["totalDone"] = k["totalDone"] + j.hour
+                            
+        if len(context['pbi_list']) == 0:
+            megaDone = 0;
         
         if len(context['pbi_list']) > 0:
             megaDone = 1;
@@ -323,7 +377,22 @@ class viewSprintBacklog(TemplateView):
                         if j["allDone"] == 1:
                             i.status = "Completed"
                         elif j["allDone"] == 0:
-                            i.status = "In Progress"
+                            if i.sprint.status == "Completed":
+                                i.status = "Not finished"
+                                """
+                                try:
+                                    find = Sprint.objects.get(number = i.sprint.number + 1, project = i.project)
+                                    i.sprint = find
+                                    find2 = Task.objects.get(sprint = i.sprint.number + 1, project = i.project, item = i)
+                                    for k in find2:
+                                        if k.status != "Completed":
+                                            k.sprint = i.sprint.number + 1
+                                            k.save()
+                                except Sprint.DoesNotExist:
+                                    i.sprint = i.sprint
+                                """
+                            else:
+                                i.status = "In Progress"
                             megaDone = 0
                         i.save()
                         
@@ -364,6 +433,7 @@ class viewSprintBacklog(TemplateView):
 def SprintToInProgressView(request, sprint_pk):
     obj = get_object_or_404(Sprint, pk=sprint_pk)
     obj.status = 'In Progress'
+            
     j = obj.project
     j.last_sprint = obj.number
     j.save()
@@ -374,10 +444,25 @@ def SprintToInProgressView(request, sprint_pk):
 def SprintToCompletedView(request, sprint_pk):
     obj = get_object_or_404(Sprint, pk=sprint_pk)
     obj.status = 'Completed'
+    obj.end_at = timezone.now()
+    
     j = obj.project
     j.last_sprint = obj.number + 1
     j.save()
     obj.save()
+    
+    finished = 1
+    k = Item.objects.filter(sprint__pk = sprint_pk)
+    for f in k:
+        if f.status != "Completed":
+            finished = 0
+    
+    try:
+        find = Sprint.objects.get(number = obj.number + 1, project = j)
+    except Sprint.DoesNotExist:
+        if finished == 0:
+            newSprint = Sprint(number = obj.number + 1 , capacity = 0, status = "Not yet started", project = j)
+            newSprint.save()
     
     return HttpResponseRedirect('/pbi/viewSprintBacklog/%i/' % obj.id)
 

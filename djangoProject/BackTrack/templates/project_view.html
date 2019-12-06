@@ -7,18 +7,6 @@
 <p>
     <p align="center"><b>Project name: </b> {{project.name}} </p>
     <p align="center"><b>Description: </b> {{project.description}} </p>
-    <!--
-	{% for sprint in sprint_list %}
-        <p>Sprint {{sprint.number}}
-        <b>  Status:</b>   {{sprint.status}}
-        <b>  Create Time:</b>   {{sprint.create_at}}</p>
-        <b>  End Time:</b>   {{sprint.end_at}}</p>
-        <p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewSprintBacklog/{{sprint.pk}}';"
-                    value="SprintBacklog">SprintBacklog</button></p>
-        {% empty %}
-        <p>No sprint yet.</p>
-    {% endfor %}
-	-->
 	<table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
 		<thead>
 			<tr>

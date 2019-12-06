@@ -12,6 +12,7 @@
             <tr>
 				<td align="center" valign="center">{{ r.name }}</td>
                 <td align="center" valign="center">{{ r.description }}</td>
+				<td align="center" valign="center">{{ r.status }}</td>
                 <td align="center" valign="center">
 					<p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ r.pk }}';" value="GoIntoProductBacklog">View Product Backlog</button></p>
 					<p><button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ r.pk }}';">View Sprints</button></p>
@@ -19,6 +20,7 @@
             </tr>
 		{% empty %}
 			<tr>
+				<td align="center" valign="center">*empty*</td>
 				<td align="center" valign="center">*empty*</td>
 				<td align="center" valign="center">*empty*</td>
 				<td align="center" valign="center">*nothing to be done*</td>

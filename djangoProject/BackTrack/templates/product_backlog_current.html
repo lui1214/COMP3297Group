@@ -1,4 +1,4 @@
-<h1 align="center">{{row1.project.name}}</h1>
+<h1 align="center">{{row1.name}}</h1>
 <table class="table" border="1" style="border:3px #FF4500 dashed;" cellpadding="10" align="center">
     <thead>
         <tr>
@@ -56,8 +56,13 @@
 
 <p align="center">
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/createPBI/';">Add new PBI</button>
-	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{row1.project.pk}}';">Switch to full view</button>
-    <button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{row1.project.pk}}';">View Sprints</button>
+	<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{row1.pk}}';">Switch to full view</button>
+    <button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{row1.pk}}';">View Sprints</button>
+	{% if row1.project.status == "Completed" %}
+		<button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectToInProgress/{{row1.pk}}';">Save project as In Progress</button>
+	{% else %}
+		<button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectToCompleted/{{row1.pk}}';">Save Project as Completed</button>
+	{% endif %}
     <button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectList/';">Back</button>
 </p>
 

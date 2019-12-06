@@ -44,6 +44,7 @@ class Item(models.Model):
 		('Completed', 'Completed'),
 		('In Progress', 'In Progress'),
 		('Not yet started', 'Not yet started'),
+        ('Not finished', 'Not finished'),
 	)
 	order = models.PositiveIntegerField()
 	name = models.CharField(max_length=200)

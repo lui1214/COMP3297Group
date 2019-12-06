@@ -137,10 +137,9 @@
 	
 	<p align="center"><b>Maximum effort hour: </b>{{sprint.capacity}}</p>
 	<p align="center">
-		{% if megaDone == 1 and sprint.status == "Completed" %}
+		{% if sprint.status == "Completed" %}
 			<button onclick="window.location.href = 'http://localhost:8000/pbi/SprintToInProgress/{{ sprint.pk }}';">Change Status to In Progress</button>
-		{% endif %}
-		{% if megaDone == 1 and sprint.status == "In Progress" %}
+		{% else %}
 			<button onclick="window.location.href = 'http://localhost:8000/pbi/SprintToCompleted/{{ sprint.pk }}';">Change Status to Completed</button>
 		{% endif %}
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ sprint.project.pk }}';">View Product Backlog</button>
