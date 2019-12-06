@@ -27,6 +27,38 @@ def register(response):
         form = RegisterForm()
 
     return render(response, "registration/register.html", {"form":form})
+
+def ProfileView(request):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+    
+    u = User.objects.get(username = request.user.username)
+    
+    try:
+        p = Person.objects.get(user = u)
+    except Person.DoesNotExist:
+        newPerson = Person(user = u)
+        newPerson.save()
+        
+        return HttpResponseRedirect('/pbi/updatePerson/%i/' % newPerson.id)
+        
+    return render(request, 'profile.html')
+    
+class PersonUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = '/pbi/login/'
+    redirect_field_name = 'redirect_to'
+
+    model = Person
+    fields = '__all__'
+    template_name = 'pbi_new.html'
+    pk_personUpdate_kwargs = 'personUpdate_pk'
+    
+    def get_object(self,queryset=None):
+        snum = int(self.kwargs.get(self.pk_personUpdate_kwargs,None))
+        obj = get_object_or_404(Person, pk=snum)
+        return obj
+    def get_success_url(self):
+        return reverse_lazy('profile')
     
 class PbiUpdateView(LoginRequiredMixin, UpdateView):
     login_url = '/pbi/login/'

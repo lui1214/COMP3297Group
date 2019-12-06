@@ -42,7 +42,7 @@
 	<p align="center">
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{project.pk}}';" value="ProductBacklog">View Product Backlog</button>
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/createSprint/{{project.pk}}';" value="createSprint">Create New Sprint</button>
-		<button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectList/';" value="Back">Back</button>
+		<button onclick="window.history.back();" value="Back" type="reset">Back</button>
 	</p>
     <p align="center"><b>Person invloved:</b>
 	<ol style="text-align:center;max-width:260px;margin:0 auto;">

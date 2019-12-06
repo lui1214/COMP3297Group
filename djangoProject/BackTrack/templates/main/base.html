@@ -48,6 +48,7 @@
 		{% if user.is_authenticated == True %}
 			<a href="/pbi/profile/">Profile</a>
 			<a href="/pbi/logout/">Log out</a>
+			<p align="center" style="color:yellow">Logged in as {{ user.get_username }}</p>
 		{% endif %}
 	</div>
  

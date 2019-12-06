@@ -12,5 +12,5 @@
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ item.pk }}';">Edit</button>
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ item.pk }}';">Delete</button>
 {% endif %}
-<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{item.project.pk}}';" value="Back" type="reset">Back</button>
+<button onclick="window.history.back();" value="Back" type="reset">Back</button>
 {% endblock %}

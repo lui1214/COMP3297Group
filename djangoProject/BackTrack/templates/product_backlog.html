@@ -67,7 +67,7 @@
 	{% else %}
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectToCompleted/{{row1.pk}}';">Save Project as Completed</button>
 	{% endif %}
-    <button onclick="window.location.href = 'http://localhost:8000/pbi/ProjectList/';">Back</button>
+    <button onclick="window.history.back();" value="Back" type="reset">Back</button>
 </p>
 
 <hr>
