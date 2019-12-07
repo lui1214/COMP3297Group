@@ -75,9 +75,10 @@ class Item(models.Model):
 		('Not finished', 'Not finished'),
 	)
 	order = models.PositiveIntegerField()
+	oldOrder = models.PositiveIntegerField(blank=True, null=True)
 	name = models.CharField(max_length=200)
 	description = models.CharField(max_length=200)
-	remaining_sprint_size = models.PositiveIntegerField()
+	remaining_sprint_size = models.PositiveIntegerField(blank=True, null=True)
 	estimate_of_story_point = models.PositiveIntegerField()
 	cumulative_story_point = models.PositiveIntegerField(default=0, editable=False)
 	status = models.CharField(choices=STAT, default='Not yet started', max_length=200)

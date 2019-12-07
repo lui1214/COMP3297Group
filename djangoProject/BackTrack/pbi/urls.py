@@ -126,9 +126,9 @@ urlpatterns = [
 	path('createSprint/',
 		views.SprintCreateView.as_view(),
 		name='createSprint'),
-	path('SprintAddDetail/<int:sprint_pk>/',
-		views.SprintAddDetailView,
-		name='SprintAddDetail'),
+	#path('SprintAddDetail/<int:sprint_pk>/',
+	#	views.SprintAddDetailView,
+	#	name='SprintAddDetail'),
 
 	path('deleteSprint/<int:sprintDelete_pk>/',
 		views.SprintDeleteView.as_view(),

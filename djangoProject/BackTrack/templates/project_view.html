@@ -45,7 +45,7 @@
 	<p align="center">
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{project.pk}}';" value="ProductBacklog">View Product Backlog</button>
 		{% if person1.role != "Scrum Master" %}
-			<button onclick="window.location.href = 'http://localhost:8000/pbi/createSprint/{{project.pk}}';" value="createSprint">Create New Sprint</button>
+			<button onclick="window.location.href = 'http://localhost:8000/pbi/createSprint/';" value="createSprint">Create New Sprint</button>
 		{% endif %}
 		<button onclick="window.history.back();" value="Back" type="reset">Back</button>
 	</p>

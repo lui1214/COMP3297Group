@@ -6,7 +6,7 @@
 <p><b>Project handling: </b>
     {% if project.name == NONE %}
         Not handling any project currently
-        {% if person.role == "Developer"%}
+        {% if person.role == "Developer" or person.role == "Product Owner"%}
             <p><button onclick="window.location.href = '/pbi/createProject/';">Create New Project</button></p>
         {% endif %}
     {% else %}
@@ -23,9 +23,10 @@
 </p>
 {% if person.chosen == 1 and role == NONE%}
     <p style="color:red;font-size:50px;"> Caution: Role cannot be edit manually after chosen!!!</p>
+	Select your role:
     <p>
-        <button onclick="window.location.href = '/pbi/BeDeveloper/';">Be Developer</button>
-        <button onclick="window.location.href = '/pbi/BeManager/';">Be Manager</button>
+        <button onclick="window.location.href = '/pbi/BeDeveloper/';">Developer</button>
+        <button onclick="window.location.href = '/pbi/BeManager/';">Manager</button>
     </p>
 {% endif %}
 
