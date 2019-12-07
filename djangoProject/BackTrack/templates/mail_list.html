@@ -1,14 +1,28 @@
 {% extends "main/base.html" %}
 {% block content %}
-<ol>
-    {% if person.role == "Product Owner" %}
+{% if person.role == "Product Owner" %}
+<ul>
+	<li>Developers<ol>
         {% for d in developers %}
             <li>{{ d.user.username }} : {{ d.user.email }}</li>
             <button onclick="window.location.href = '/pbi/SendMail/{{ d.user.email }}';">Send Invitation Mail</button>
         {% endfor %}
-        <br><br><br><br><button onclick="window.location.href = '/pbi/SendMailToAll/';">Send Invitation Mail To All Developers</button>
-    {% else %}
-        <p>You are not a product owner.</p>
-    {% endif %}
-</ol>
+		<p style="position: fixed; bottom: 0; width:100%;">
+			<button onclick="window.location.href = '/pbi/SendMailToAll/';">Send Invitation Mail To All Developers</button>
+		</p>
+	</ol></li>
+	
+	<li>Managers<ol>
+        {% for m in managers %}
+            <li>{{ m.user.username }} : {{ m.user.email }}</li>
+            <button onclick="window.location.href = '/pbi/SendMail/{{ m.user.email }}';">Send Invitation Mail</button>
+        {% endfor %}
+        <p style="position: fixed; bottom: 0; width:100%; text-align: center">
+			<button onclick="window.location.href = '/pbi/SendMailToAllManager/';">Send Invitation Mail To All Managers</button>
+		</p>
+	</ol></li>
+</ul>
+{% else %}
+    <p>You are not a product owner.</p>
+{% endif %}
 {% endblock %}

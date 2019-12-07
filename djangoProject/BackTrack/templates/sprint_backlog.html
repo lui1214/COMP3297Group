@@ -39,20 +39,21 @@
 								{{ task.hour }} hours <br>
                                 
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
-								
-                                {% if task.person != NONE %}
-                                    {% if task.person.user.username == user.get_username %}
-                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
-                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
-                                        <br>
-                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToInProgress/{{ task.pk }}';">Mark as in progress</button>
-                                        <br>
-                                        <button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToCompleted/{{ task.pk }}';">Mark as completed</button>
-                                    {% endif %}
-                                {% else %}
-                                    <br>
-                                    <button onclick="window.location.href = 'http://localhost:8000/pbi/TaskOwn/{{ task.pk }}';">Declare Ownership</button>
-                                {% endif %}
+								{% if person1.role != "Scrum Master" %}
+									{% if task.person != NONE %}
+										{% if task.person.user.username == user.get_username %}
+											<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
+											<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
+											<br>
+											<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToInProgress/{{ task.pk }}';">Mark as in progress</button>
+											<br>
+											<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToCompleted/{{ task.pk }}';">Mark as completed</button>
+										{% endif %}
+									{% else %}
+										<br>
+										<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskOwn/{{ task.pk }}';">Declare Ownership</button>
+									{% endif %}
+								{% endif %}
 							</p>
 						{% endif %}
 					{% endif %}
@@ -66,12 +67,14 @@
 								{{ task.name }} <br>
 								{{ task.hour }} hours <br>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
+								{% if person1.role != "Scrum Master" %}
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
 								<br>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToNotYetStarted/{{ task.pk }}';">Mark as not yet started</button>
 								<br>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToCompleted/{{ task.pk }}';">Mark as completed</button>
+								{% endif %}
 							</p>
 						{% endif %}
 					{% endif %}
@@ -85,12 +88,14 @@
 								{{ task.name }} <br>
 								{{ task.hour }} hours <br>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/viewTask/{{ task.pk }}';">View</button>
+								{% if person1.role != "Scrum Master" %}
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
 								<br>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToNotYetStarted/{{ task.pk }}';">Mark as not yet started</button>
 								<br>
 								<button onclick="window.location.href = 'http://localhost:8000/pbi/TaskToInProgress/{{ task.pk }}';">Mark as in progress</button>
+								{% endif %}
 							</p>
 						{% endif %}
 					{% endif %}
@@ -117,9 +122,11 @@
 					{% endif %}
 				{% endfor %}
 				</td>
+				{% if person1.role != "Scrum Master" %}
 				<td align="center" valign="center">
 					<button onclick="window.location.href = 'http://localhost:8000/pbi/createTask/{{ item.pk }}';">Add task</button>
 				</td>
+				{% endif %}
             </tr>
 			{% endif %}
 			{% empty %}
@@ -150,11 +157,13 @@
 	
 	<p align="center"><b>Maximum effort hour: </b>{{sprint.capacity}}</p>
 	<p align="center">
+	{% if person1.role != "Scrum Master" %}
 		{% if sprint.status == "Completed" %}
 			<button onclick="window.location.href = 'http://localhost:8000/pbi/SprintToInProgress/{{ sprint.pk }}';">Change Status to In Progress</button>
 		{% else %}
 			<button onclick="window.location.href = 'http://localhost:8000/pbi/SprintToCompleted/{{ sprint.pk }}';">Change Status to Completed</button>
 		{% endif %}
+	{% endif %}
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProductbacklog/{{ sprint.project.pk }}';">View Product Backlog</button>
 		<button onclick="window.location.href = 'http://localhost:8000/pbi/viewProject/{{ sprint.project.pk }}';">Back</button>
 	</p>

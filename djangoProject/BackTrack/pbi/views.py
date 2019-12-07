@@ -64,7 +64,15 @@ class InviteView(LoginRequiredMixin, TemplateView):
         
         person1 = Person.objects.get(user = u)
         context['person'] = person1
-        context['developers'] = Person.objects.filter(role = "Developer")
+        context['developers'] = []
+        context['managers'] = []
+        ps = Person.objects.all()
+        for i in ps:
+            if i.project == None or i.project.status == "Completed":
+                if i.role == "Developer" or i.role == "Product Owner":
+                    context['developers'].append(i)
+                else:
+                    context['managers'].append(i)
         return context
 
 @login_required(login_url='/pbi/login/')    
@@ -80,14 +88,52 @@ def SendMailView(request, emails):
     return HttpResponseRedirect("/pbi/Invite/")
 
 @login_required(login_url='/pbi/login/')    
+def SendMailToManagerView(request, emails):
+    u = request.user
+    person1 = Person.objects.get(user = u)
+    p = person1.project
+    dkey = person1.project.SMhash
+    inviteMsg = "Hello I am " + person1.user.username + ". I would like to invite you to my project " + p.name + ". Here is the key to join the project: " + dkey
+    email = EmailMessage('Project Invitation', inviteMsg, to=[emails])
+    email.send()
+    
+    return HttpResponseRedirect("/pbi/Invite/")
+
+@login_required(login_url='/pbi/login/')    
 def SendMailToAllView(request):
     u = request.user
     person1 = Person.objects.get(user = u)
     p = person1.project
     dkey = person1.project.Dhash
     inviteMsg = "Hello I am " + person1.user.username + ". I would like to invite you to my project " + p.name + ". Here is the key to join the project: " + dkey
-    developers = Person.objects.filter(role = "Developer")
+    ps = Person.objects.all()
+    developers = []
+    for i in ps:
+        if i.project == None or i.project.status == "Completed":
+            if i.role == "Developer" or i.role == "Product Owner":
+                developers.append(i)
+            
     for i in developers:
+        email = EmailMessage('Project Invitation', inviteMsg, to=[i.user.email])
+        email.send()
+    
+    return HttpResponseRedirect("/pbi/Invite/")
+    
+@login_required(login_url='/pbi/login/')      
+def SendMailToAllManagerView(request):
+    u = request.user
+    person1 = Person.objects.get(user = u)
+    p = person1.project
+    dkey = person1.project.SMhash
+    inviteMsg = "Hello I am " + person1.user.username + ". I would like to invite you to my project " + p.name + ". Here is the key to join the project: " + dkey
+    ps = Person.objects.all()
+    managers = []
+    for i in ps:
+        if i.project == None or i.project.status == "Completed":
+            if i.role == "Scrum Master" or i.role == "Manager":
+                managers.append(i)
+            
+    for i in managers:
         email = EmailMessage('Project Invitation', inviteMsg, to=[i.user.email])
         email.send()
     
@@ -125,10 +171,10 @@ def BeDeveloperView(request):
     return HttpResponseRedirect('/pbi/profile/')
     
 @login_required(login_url='/pbi/login/')
-def BeScrumMasterView(request):
+def BeManagerView(request):
     u = request.user
     person1 = Person.objects.get(user = u)
-    person1.role = "Scrum Master"
+    person1.role = "Manager"
     person1.chosen = 0
     person1.save()
     
@@ -139,7 +185,7 @@ def JoinProjectView(request):
     u = request.user
     per = Person.objects.get(user = u)
     if per.project is not None and per.project.status != "Completed":
-        return render(request, 'alert.html', {"message" : "Project joined"})
+        return render(request, 'alert.html', {"message" : "Already joined a project"})
     
     if request.method == "POST":
         form = JoinProjectForm(request.POST)
@@ -406,7 +452,7 @@ def ProjectToInProgressView(request, project_pk):
     
     u = request.user
     personCheck = Person.objects.get(user = u)
-    if personCheck.project != Project.objects.get(pk=project_pk):
+    if personCheck.project != Project.objects.get(pk=project_pk) or personCheck.role == "Scrum Master":
         return render(request, 'alert.html', {"message" : "Restricted Access"})
     
     obj.status = 'In Progress'
@@ -421,7 +467,7 @@ def ProjectToCompletedView(request, project_pk):
     
     u = request.user
     personCheck = Person.objects.get(user = u)
-    if personCheck.project != Project.objects.get(pk=project_pk):
+    if personCheck.project != Project.objects.get(pk=project_pk) or personCheck.role == "Scrum Master":
         return render(request, 'alert.html', {"message" : "Restricted Access"})
     
     obj.status = 'Completed'
@@ -457,6 +503,8 @@ class ProjectView(LoginRequiredMixin, TemplateView):
         
         u = self.request.user
         personCheck = Person.objects.get(user = u)
+        context['person1'] = personCheck
+        
         if personCheck.project != Project.objects.get(pk=project):
             context['person'] = personCheck
             return context
@@ -465,6 +513,7 @@ class ProjectView(LoginRequiredMixin, TemplateView):
         context['productowner_list'] = Person.objects.filter(project__pk = project, role = 'Product Owner')
         context['scrummaster_list'] = Person.objects.filter(project__pk = project, role = 'Scrum Master')
         context['sprint_list'] = Sprint.objects.filter(project__pk = project)
+        
         return context
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -595,7 +644,7 @@ class PbiProjectCurrentView(LoginRequiredMixin, TemplateView):
         
         u = self.request.user
         
-        ctx = super(PbiProjectView, self).get_context_data(**kwargs)
+        ctx = super(PbiProjectCurrentView, self).get_context_data(**kwargs)
         
         personCheck = Person.objects.get(user = u)
         if personCheck.project != Project.objects.get(pk=project):
@@ -730,7 +779,7 @@ class SprintDeleteView(LoginRequiredMixin, DeleteView):
         
         u = self.request.user
         personCheck = Person.objects.get(user = u)
-        if obj.project != personCheck.project:
+        if obj.project != personCheck.project or personCheck.role == "Scrum Master":
             obj = None
             return obj
             
@@ -753,7 +802,7 @@ class SprintUpdateView(LoginRequiredMixin, UpdateView):
         obj = get_object_or_404(Sprint, pk=snum)
         u = self.request.user
         personCheck = Person.objects.get(user = u)
-        if obj.project != personCheck.project:
+        if obj.project != personCheck.project or personCheck.role == "Scrum Master":
             obj = None
             return obj
         return obj
@@ -775,7 +824,8 @@ class viewSprintBacklog(LoginRequiredMixin, TemplateView):
         if personCheck.project != pj:
             context['person'] = personCheck
             return context
-        
+            
+        context['person1'] = personCheck
         context['pbi_list'] = Item.objects.filter(sprint__pk = sprint, project = s.project)
         context['task_list']= Task.objects.filter(sprint__pk = sprint)
         context['sprint'] = Sprint.objects.get(pk = sprint, project = s.project)
@@ -787,7 +837,7 @@ class viewSprintBacklog(LoginRequiredMixin, TemplateView):
         total = []
         
         for i in context['task_list']:
-            if i.item.added == True and i.project == s.project:
+            if i.item.added == True and i.item.project == s.project:
                 if i.status=="Completed":
                     done = done + i.hour
                 elif i.status=="In Progress":
@@ -797,7 +847,7 @@ class viewSprintBacklog(LoginRequiredMixin, TemplateView):
                 
         for i in context['pbi_list']:
             for j in context['task_list']:
-                if j.item.added == True and j.project == s.project:
+                if j.item.added == True and j.item.project == s.project:
                     if j.item.name == i.name:
                         k = next((p for p in total if p["name"] == j.item.name), False)
                         if k == False:
@@ -828,7 +878,7 @@ class viewSprintBacklog(LoginRequiredMixin, TemplateView):
                 for j in total:
                     if i.name == j["name"]:
                         i.remaining_sprint_size = j["notCompleted"]
-                        i.estimate_of_story_point = j["CNC"]
+                        #i.estimate_of_story_point = j["CNC"]
                         if j["allDone"] == 1:
                             i.status = "Completed"
                         elif j["allDone"] == 0:
@@ -891,7 +941,7 @@ def SprintToInProgressView(request, sprint_pk):
     
     u = request.user
     personCheck = Person.objects.get(user = u)
-    if obj.project != personCheck.project:
+    if obj.project != personCheck.project or personCheck.role == "Scrum Master":
         return render(request, 'alert.html', {"message" : "Restricted Access"})
     
     obj.status = 'In Progress'
@@ -910,7 +960,7 @@ def SprintToCompletedView(request, sprint_pk):
     
     u = request.user
     personCheck = Person.objects.get(user = u)
-    if obj.project != personCheck.project:
+    if obj.project != personCheck.project or personCheck.role == "Scrum Master":
         return render(request, 'alert.html', {"message" : "Restricted Access"})
     
     obj.status = 'Completed'
@@ -1031,7 +1081,7 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
         
         u = self.request.user
         personCheck = Person.objects.get(user = u)
-        if obj.item.project != personCheck.project:
+        if obj.item.project != personCheck.project or personCheck.role == "Scrum Master":
             obj = None
             return obj
             
@@ -1048,14 +1098,14 @@ class TaskView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         t = Task.objects.get(pk=task)
         u = self.request.user
-        person1 = Person.objects.get(user = u)
+        personCheck = Person.objects.get(user = u)
         if t.item.project != personCheck.project:
             context['person'] = personCheck
             return context
         
         context['task'] = t
         
-        context['person'] = person1
+        context['person1'] = personCheck
         return context
 
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
@@ -1075,7 +1125,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
         obj = get_object_or_404(Task, pk=snum)
         u = self.request.user
         personCheck = Person.objects.get(user = u)
-        if obj.item.project != personCheck.project:
+        if obj.item.project != personCheck.project or personCheck.role == "Scrum Master":
             obj = None
             return obj
         return obj
@@ -1084,6 +1134,12 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 def TaskToNotYetStartedView(request, task_pk):
 
     obj = get_object_or_404(Task, pk=task_pk)
+    
+    u = request.user
+    personCheck = Person.objects.get(user = u)
+    if obj.item.project != personCheck.project or personCheck.role == "Scrum Master":
+        return render(request, 'alert.html', {"message" : "Restricted Access"})
+    
     obj.status = 'Not yet started'
     k = obj.sprint
     k.status = "In Progress"
@@ -1099,7 +1155,7 @@ def TaskToInProgressView(request, task_pk):
     
     u = request.user
     personCheck = Person.objects.get(user = u)
-    if obj.item.project != personCheck.project:
+    if obj.item.project != personCheck.project or personCheck.role == "Scrum Master":
         return render(request, 'alert.html', {"message" : "Restricted Access"})
     
     obj.status = 'In Progress'
@@ -1117,7 +1173,7 @@ def TaskToCompletedView(request, task_pk):
     
     u = request.user
     personCheck = Person.objects.get(user = u)
-    if obj.item.project != personCheck.project:
+    if obj.item.project != personCheck.project or personCheck.role == "Scrum Master":
         return render(request, 'alert.html', {"message" : "Restricted Access"})
     
     obj.status = 'Completed'
@@ -1131,7 +1187,7 @@ def TaskOwnView(request, task_pk):
     
     u = request.user
     personCheck = Person.objects.get(user = u)
-    if obj.item.project != personCheck.project:
+    if obj.item.project != personCheck.project or personCheck.role == "Scrum Master":
         return render(request, 'alert.html', {"message" : "Restricted Access"})
     
     u = request.user

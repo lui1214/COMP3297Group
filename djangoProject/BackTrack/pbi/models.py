@@ -37,6 +37,7 @@ class Person(models.Model):
 	STAT = (
 		('Product Owner', 'Product Owner'),
 		('Scrum Master', 'Scrum Master'),
+		('Manager', 'Manager'),
 		('Developer', 'Developer'),
 	)
 	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
