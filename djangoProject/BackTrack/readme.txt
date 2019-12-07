@@ -33,10 +33,13 @@ program:
 
 Important Notes:
 	If you want to send emails to invite people to join your project,
-make sure the SMTP setting in BackTrack\config\settings.py is correct.
+make sure the SMTP setting in \BackTrack\config\settings.py is correct.
 The lines 131-134 are the configuration referring to your SMTP server,
 username, password, and the SMTP port number.
 
 	As the development time schedule is tight, we did not deal with the
 concurrent update issue to provide the most valuable product to the 
-customer.
+customer. Besides, the permission of adding, modifying, and deleting the
+objects may not be well set since the model and user model are already 
+defined in the early stage, it is too time consuming to change the models
+with dependencies with other models.
