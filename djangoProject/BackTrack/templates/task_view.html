@@ -1,15 +1,19 @@
 {% extends "main/base.html" %}
 
 {% block content %}
+{% if person == NONE %}
 <p><b>Name: </b>{{ task.name }}</p>
 <p><b>Description: </b>{{ task.description }}</p>
 <p><b>Estimate hour: </b>{{ task.hour }}</p>
-<p><b>Owner: </b>{{ task.person.name }}</p>
+<p><b>Owner: </b>{{ task.person.user.username }}</p>
 <p><b>Status: </b>{{ task.status }}</p>
 <p><b>PBI: </b>{{ task.item }}</p>
-{% if task.person != NONE %}
+{% if task.person != NONE and person.user == task.person.user %}
     <button onclick="window.location.href = 'http://localhost:8000/pbi/updateTask/{{ task.pk }}';">Edit</button>
     <button onclick="window.location.href = 'http://localhost:8000/pbi/deleteTask/{{ task.pk }}';">Delete</button>
 {% endif %}
 <button onclick="window.history.back();" value="Back" type="reset">Back</button>
+{% else %}
+	<p>Restricted Access</p>
+{% endif %}
 {% endblock %}

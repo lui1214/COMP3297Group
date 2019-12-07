@@ -1,6 +1,7 @@
 {% extends "main/base.html" %}
 
 {% block content %}
+{% if person == NONE %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,4 +75,7 @@
 	</p>
 </body>
 </html>
+{% else %}
+	<p>Restricted Access</p>
+{% endif %}
 {% endblock %}

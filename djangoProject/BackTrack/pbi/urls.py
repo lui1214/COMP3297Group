@@ -18,7 +18,7 @@ urlpatterns = [
 	path('password_reset_done/', 
 		auth_views.PasswordResetDoneView.as_view(), 
 		name='password_reset_done'),
-	path('password_reset_confirm/', 
+	path('password_reset_confirm/<uidb64>/<token>/', 
 		auth_views.PasswordResetConfirmView.as_view(), 
 		name='password_reset_confirm'),
 	path('password_reset_complete/', 
@@ -51,6 +51,9 @@ urlpatterns = [
 	path('SendMailToAll/', 
 		views.SendMailToAllView, 
 		name='SendMailToAll'),
+	path('changePassword/',
+		views.change_password,
+		name='change_password'),
 
 	path('', 
 		views.index, 
@@ -85,9 +88,9 @@ urlpatterns = [
 		name='PbiRemoveFromSprintView'),
 
 	#---------------person---------------------------------------------------#
-	path('PersonHomePage/<int:person>/',
-		views.PersomHomepage.as_view(),
-		name='PersonHomepage'),
+	#path('PersonHomePage/<int:person>/',
+	#	views.PersomHomepage.as_view(),
+	#	name='PersonHomepage'),
 		
 	#-----------project--------------------------------------------------#
 	path('ProjectList/',
@@ -105,15 +108,15 @@ urlpatterns = [
 	path('createProject/',
 		views.ProjectCreateView.as_view(),
 		name='createProject'),
-	path('ProjectAddPO/<int:project_pk>/',
-		views.ProjectAddPOView,
-		name='ProjectAddPO'),
+	#path('ProjectAddPO/<int:project_pk>/',
+	#	views.ProjectAddPOView,
+	#	name='ProjectAddPO'),
 
 	#-------sprintbacklog--------------------------------------------------------#
 	path('viewSprintBacklog/<int:sprint>/',
 		views.viewSprintBacklog.as_view(),
 		name='sprintbacklog'),
-	path('createSprint/<int:project>/',
+	path('createSprint//',
 		views.SprintCreateView.as_view(),
 		name='createSprint'),
 	path('SprintAddDetail/<int:sprint_pk>/',
@@ -135,9 +138,9 @@ urlpatterns = [
 	path('createTask/<int:item_pk>/',
 		views.TaskCreateView.as_view(),
 		name='createTask'),
-	path('TaskAddDetail/<int:task_pk>/',
-		views.TaskAddDetailView,
-		name='TaskAddDetail'),
+	#path('TaskAddDetail/<int:task_pk>/',
+	#	views.TaskAddDetailView,
+	#	name='TaskAddDetail'),
 
 	path('viewTask/<int:task>/',
 		views.TaskView.as_view(),

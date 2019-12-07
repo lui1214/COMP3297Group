@@ -1,6 +1,7 @@
 {% extends "main/base.html" %}
 
 {% block content %}
+{% if person == NONE %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +32,7 @@
 				
 				<td align="center" valign="center">
 				{% for task in task_list %}
-					{% if task.item == item %}
+					{% if task.item == item and item.project == sprint.project%}
 						{% if task.status == "Not yet started" %}
 							<p style="border:3px; border-style:solid; border-radius:5px; border-color:#03A9FC; padding: 1em;">
 								{{ task.name }} <br>
@@ -160,4 +161,7 @@
 	
 </body>
 </html>
+{% else %}
+	<p>Restricted Access</p>
+{% endif %}
 {% endblock %}

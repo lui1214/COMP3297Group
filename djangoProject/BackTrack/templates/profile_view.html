@@ -20,8 +20,8 @@
         {% endif %}
     {% endif %}
 </p>
-{% if person.chosen == 1 %}
-    <p style="color:red;font-size:50px;"> Caution: Role cannot be edit mannually after chosen!!!</p>
+{% if person.chosen == 1 and role == NONE%}
+    <p style="color:red;font-size:50px;"> Caution: Role cannot be edit manually after chosen!!!</p>
     <p>
         <button onclick="window.location.href = '/pbi/BeDeveloper/';">Be Developer</button>
         <button onclick="window.location.href = '/pbi/BeScrumMaster/';">Be Scrum Master</button>

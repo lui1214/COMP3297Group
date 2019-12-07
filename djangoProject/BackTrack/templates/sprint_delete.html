@@ -1,10 +1,14 @@
 {% extends "main/base.html" %}
 
 {% block content %}
+{% if object != NONE %}
 <form method="post">
 	{% csrf_token %}
     <p>Are you sure you want to delete "{{ object }}"?</p>
     <input type="submit" value="Confirm">
 	<button onclick="window.history.back();" value="Back" type="reset">Back</button>
 </form>
+{% else %}
+	<p>Restricted Access</p>
+{% endif %}
 {% endblock %}

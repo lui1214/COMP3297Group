@@ -1,0 +1,19 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+{% if object != NONE %}
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Submit">
+	  <button onclick="window.history.back();" value="Back" type="reset">Back</button>
+  </form>
+</body>
+</html>
+{% else %}
+	<p>Restricted Access</p>
+{% endif %}
+{% endblock %}

@@ -1,6 +1,7 @@
 {% extends "main/base.html" %}
 
 {% block content %}
+{% if person == NONE %}
 <p><b>Order: </b>{{ item.order }}</p>
 <p><b>Feature name: </b>{{ item.name }}</p>
 <p><b>Description: </b>{{ item.description }}</p>
@@ -8,9 +9,12 @@
 <p><b>Remaining Sprint Size: </b>{{ item.remaining_sprint_size }}</p>
 <p><b>Estimate of Story Point: </b>{{ item.estimate_of_story_point }}</p>
 <p><b>Status: </b>{{ item.status }}</p>
-{% if item.status == "Not yet started" %}
+{% if item.status == "Not yet started" and person1.role != "Scrum Master"%}
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/updatePBI/{{ item.pk }}';">Edit</button>
 	<button onclick="window.location.href = 'http://localhost:8000/pbi/deletePBI/{{ item.pk }}';">Delete</button>
 {% endif %}
 <button onclick="window.history.back();" value="Back" type="reset">Back</button>
+{% else %}
+	<p>Restricted Access</p>
+{% endif %}
 {% endblock %}
