@@ -127,3 +127,10 @@ CRISPY_TEMPLATE_PACK="bootstrap4"
 
 LOGIN_REDIRECT_URL = "/pbi/"
 LOGOUT_REDIRECT_URL = "/pbi/login/"
+
+EMAIL_HOST = 'smtp.mailtrap.io'
+EMAIL_HOST_USER = 'ef407780663a03'
+EMAIL_HOST_PASSWORD = '543aae27588947'
+EMAIL_PORT = '2525'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

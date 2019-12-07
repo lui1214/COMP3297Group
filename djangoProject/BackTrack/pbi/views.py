@@ -16,6 +16,7 @@ from django.forms import modelformset_factory
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.mail import *
 
 def index(request):
     return HttpResponseRedirect("/pbi/profile/")
@@ -32,40 +33,54 @@ def register(response):
 
     return render(response, "registration/register.html", {'form' : form})
 
-"""
-@login_required(login_url='/pbi/login/')
-def ProfileView(request):
     
-    u = User.objects.get(username = request.user.username)
-    
-    try:
-        p = Person.objects.get(user = u)
-    except Person.DoesNotExist:
-        newPerson = Person(user = u)
-        newPerson.save()
-        p = newPerson
-        
-    return HttpResponseRedirect('/pbi/viewProfile/%i/' % p.id)
-    
-class RedirectedProfileView(LoginRequiredMixin, TemplateView):
+    """
+    email = EmailMessage('Subject', 'Body', to=['kshitu.rangari@gmail.com'])
+    email.send()
+    """
+
+class InviteView(LoginRequiredMixin, TemplateView):
     login_url = '/pbi/login/'
     redirect_field_name = 'redirect_to'
-    
-    template_name = 'profile_view.html'
+
+    template_name="mail_list.html"
+    model = Person
     
     def get_context_data(self, **kwargs):
-        person = self.kwargs['person']
-        context = super().get_context_data(**kwargs)
-        context['person'] = Person.objects.get(pk=person)
+        context = super(InviteView, self).get_context_data(**kwargs)
+        u = self.request.user
         
-        try :
-            context['project'] = context['person'].project
-        except Project.DoesNotExist:
-            context['project'] = []
-            
+        person1 = Person.objects.get(user = u)
+        context['person'] = person1
+        context['developers'] = Person.objects.filter(role = "Developer")
         return context
-"""        
 
+@login_required(login_url='/pbi/login/')    
+def SendMailView(request, emails):
+    u = request.user
+    person1 = Person.objects.get(user = u)
+    p = person1.project
+    dkey = person1.project.Dhash
+    inviteMsg = "Hello I am " + person1.user.username + ". I would like to invite you to my project " + p.name + ". Here is the key to join the project: " + dkey
+    email = EmailMessage('Project Invitation', inviteMsg, to=[emails])
+    email.send()
+    
+    return HttpResponseRedirect("/pbi/Invite/")
+
+@login_required(login_url='/pbi/login/')    
+def SendMailToAllView(request):
+    u = request.user
+    person1 = Person.objects.get(user = u)
+    p = person1.project
+    dkey = person1.project.Dhash
+    inviteMsg = "Hello I am " + person1.user.username + ". I would like to invite you to my project " + p.name + ". Here is the key to join the project: " + dkey
+    developers = Person.objects.filter(role = "Developer")
+    for i in developers:
+        email = EmailMessage('Project Invitation', inviteMsg, to=[i.user.email])
+        email.send()
+    
+    return HttpResponseRedirect("/pbi/Invite/")
+    
 class ProfileView(LoginRequiredMixin, TemplateView):
     login_url = '/pbi/login/'
     redirect_field_name = 'redirect_to'
@@ -87,6 +102,25 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         context['person'] = person1
         return context
 
+@login_required(login_url='/pbi/login/')
+def BeDeveloperView(request):
+    u = request.user
+    person1 = Person.objects.get(user = u)
+    person1.role = "Developer"
+    person1.chosen = 0
+    person1.save()
+    
+    return HttpResponseRedirect('/pbi/profile/')
+    
+@login_required(login_url='/pbi/login/')
+def BeScrumMasterView(request):
+    u = request.user
+    person1 = Person.objects.get(user = u)
+    person1.role = "Scrum Master"
+    person1.chosen = 0
+    person1.save()
+    
+    return HttpResponseRedirect('/pbi/profile/')
         
 @login_required(login_url='/pbi/login/')
 def JoinProjectView(request):

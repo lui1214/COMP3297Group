@@ -42,6 +42,7 @@ class Person(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True)
 	role = models.CharField(choices=STAT, max_length=200, blank=True, null=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, blank=True, null=True)
+	chosen = models.PositiveIntegerField(default=1)
 	
 	def __str__(self):
 		return self.user.username

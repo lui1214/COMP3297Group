@@ -10,16 +10,12 @@ class ItemForm(ModelForm):
 		fields = '__all__'
 
 class RegisterForm(UserCreationForm):
-	ROLE_CHOICES = (
-		("Developer", "Developer"),
-		("Manager", "Manager"),
-	)
+
 	email = forms.EmailField(required=True)
-	role = forms.ChoiceField(choices = ROLE_CHOICES, label="", initial='', widget=forms.Select(), required=True)
 
 	class Meta:
 		model = User
-		fields = ["username", "email", "password1", "password2", "role"]
+		fields = ["username", "email", "password1", "password2"]
         
 class JoinProjectForm(forms.Form):
     field = forms.CharField(label='Hashkey', max_length=80)
