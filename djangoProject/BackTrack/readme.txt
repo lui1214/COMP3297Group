@@ -30,7 +30,17 @@ program:
 				
 5. Finally, you can run the program by the following command:
 			python manage.py runserver
-
+			
+6. You can access the program with:
+		http://localhost:8000/pbi/
+		
+7. You can access the admin page with:
+		http://localhost:8000/admin/
+		
+	by using:
+		account: admin
+		password: AdvanceBacklog
+		
 Important Notes:
 	If you want to send emails to invite people to join your project,
 make sure the SMTP setting in \BackTrack\config\settings.py is correct.
